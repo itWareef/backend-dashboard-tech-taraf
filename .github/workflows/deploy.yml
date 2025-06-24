@@ -19,7 +19,7 @@ jobs:
           username: admin_backend
           password: Mcx1%@nbiK5FBGIs
           protocol: ftp
-          server-dir: /wareef-group.com/ # Ensure this directory exists
+          server-dir: / # Ensure this directory exists
           local-dir: ./                 # Ensure all required files are present here
           exclude: |
             **/.git*
