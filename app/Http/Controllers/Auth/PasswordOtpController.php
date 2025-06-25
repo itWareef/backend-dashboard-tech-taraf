@@ -32,7 +32,7 @@ class PasswordOtpController extends Controller
 
         Mail::to($request->email)->send(new \App\Mail\SendPasswordOtp($otp));
 
-        return Response::success([],['تم إرسال رمز التحقق إلى بريدك الإلكتروني.']);
+        return Response::success(['otp' => $otp],['تم إرسال رمز التحقق إلى بريدك الإلكتروني.']);
     }
     public function verifyOtpAndReset(Request $request)
     {
