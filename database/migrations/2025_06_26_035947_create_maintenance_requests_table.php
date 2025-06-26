@@ -11,15 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('planting_requests', function (Blueprint $table) {
+        Schema::create('maintenance_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('requester_id')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('unit_id')->constrained('units')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('admin_id')->nullable()->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('supervisor_id')->nullable()->constrained('supervisors')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('date');
             $table->string('picture')->nullable();
+            $table->string('time')->nullable();
+            $table->string('otp')->nullable();
             $table->text('notes')->nullable();
-            $table->enum('status', \App\Models\Requests\PlantingRequest::STATUSES)->default(\App\Models\Requests\PlantingRequest::IN_PROGRESS);
+            $table->double('rating')->nullable();
+            $table->integer('visits_count')->default(0);
+            $table->enum('status', \App\Models\Requests\MaintenanceRequest::STATUSES)->default(\App\Models\Requests\MaintenanceRequest::IN_PROGRESS);
             $table->timestamps();
         });
     }
@@ -29,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('planting_requests');
+        Schema::dropIfExists('maintenance_requests');
     }
 };

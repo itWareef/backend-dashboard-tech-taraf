@@ -21,5 +21,12 @@ Route::prefix('customer')->group(function () {
     Route::post('logout', [CustomerController::class, 'logout'])->middleware(['auth:customer',]);
     Route::post('/password/send-otp', [PasswordOtpController::class, 'sendOtp']);
     Route::post('/password/verify-otp', [PasswordOtpController::class, 'verifyOtpAndReset']);
-
+    Route::post('maintenance-request', [\App\Http\Controllers\MaintenanceRequestController::class ,'store'])->middleware(['auth:customer',]);
+    Route::post('maintenance-request/add-review/{maintenanceRequest}', [\App\Http\Controllers\MaintenanceRequestController::class ,'addReview'])->middleware(['auth:customer',]);
+    Route::get('maintenance-request/{status}', [\App\Http\Controllers\MaintenanceRequestController::class ,'list'])->middleware(['auth:customer',]);
+    Route::post('planting-request', [\App\Http\Controllers\PlantingRequestController::class ,'store'])->middleware(['auth:customer',]);
+    Route::post('planting-request/add-review/{plantingRequest}', [\App\Http\Controllers\PlantingRequestController::class ,'addReview'])->middleware(['auth:customer',]);
+    Route::get('planting-request/{status}', [\App\Http\Controllers\PlantingRequestController::class ,'list'])->middleware(['auth:customer',]);
+    Route::get('units', [\App\Http\Controllers\UnitController::class ,'listForCustomer'])->middleware(['auth:customer',]);
+    Route::get('projects', [\App\Http\Controllers\UnitController::class ,'listProjectsForCustomer'])->middleware(['auth:customer',]);
 });

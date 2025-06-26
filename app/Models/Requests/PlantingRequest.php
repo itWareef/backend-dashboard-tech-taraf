@@ -3,6 +3,9 @@
 namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
+use App\Models\Customer\Customer;
+use App\Models\Project\Unit;
+use App\Models\Supervisor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,14 +15,21 @@ class PlantingRequest extends Model implements FileUpload
     use HasFactory;
     protected $fillable=[
         'requester_id',
+        'project_id',
         'unit_id',
-        'admin_id',
         'date',
         'picture',
         'notes',
         'status',
+        'supervisor_id',
+        'time',
+        'otp',
+        'rating',
+        'visits_count'
     ];
-    public const STATUSES =[ 'in_progress', 'finished'];
+    public const STATUSES =[ 'in_progress', 'finished','waiting_rating'];
+    public const FINISHED = 'finished';
+    public const WAITING_RATING = 'waiting_rating';
     public const IN_PROGRESS = 'in_progress';
     public function documentFullPathStore(): string
     {
@@ -31,5 +41,15 @@ class PlantingRequest extends Model implements FileUpload
         return [
             'picture'
         ];
+    }
+    public function requester()
+    {
+        return $this->belongsTo(Customer::class, 'requester_id');
+    }
+    public function unit(){
+        return $this->belongsTo(Unit::class,'unit_id');
+    }
+    public function supervisor(){
+        return $this->belongsTo(Supervisor::class,'supervisor_id');
     }
 }

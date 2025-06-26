@@ -2,65 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MaintenanceRequests\AddReviewRequest;
 use App\Http\Requests\StoreMaintenanceRequestRequest;
 use App\Http\Requests\UpdateMaintenanceRequestRequest;
 use App\Models\Requests\MaintenanceRequest;
+use App\Services\RequestsServices\MaintenanceRequestStoringService;
+use Illuminate\Support\Facades\Response;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class MaintenanceRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store()
     {
-        //
+        return (new MaintenanceRequestStoringService())->storeNewRecord();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function list(string $status)
     {
-        //
+        $data = QueryBuilder::for(MaintenanceRequest::class)
+            ->where('status', $status)
+            ->paginate(7);
+        return response(['data' => $data]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreMaintenanceRequestRequest $request)
+    public function addReview(AddReviewRequest$request,MaintenanceRequest $maintenanceRequest)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(MaintenanceRequest $maintenanceRequest)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(MaintenanceRequest $maintenanceRequest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMaintenanceRequestRequest $request, MaintenanceRequest $maintenanceRequest)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(MaintenanceRequest $maintenanceRequest)
-    {
-        //
+        $maintenanceRequest->update([
+            'status'    => MaintenanceRequest::FINISHED,
+            'rating' => $request->input('rating'),
+            'notes' => $request->input('notes')?? $maintenanceRequest->notes
+        ]);
+        return Response::success([],['شكرا لإضاقة مراجعة نقدر وقتك الثمين']);
     }
 }

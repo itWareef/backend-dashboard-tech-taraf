@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Customer;
+namespace App\Models;
 
 use App\Models\Project\Unit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class Customer extends Authenticatable
+class Supervisor extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory , Notifiable,HasApiTokens;
@@ -19,7 +19,12 @@ class Customer extends Authenticatable
         'email',
         'password',
         'picture',
+        'type',
         'phone'
+    ];
+    public const TYPES = [
+        'planting',
+        'maintenance'
     ];
 
     /**

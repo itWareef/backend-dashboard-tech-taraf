@@ -12,4 +12,7 @@ class Project extends Model
         'count',
         'place'
     ];
+    public function units(){
+        return $this->hasMany(Unit::class,'project_id');
+    }
 }
