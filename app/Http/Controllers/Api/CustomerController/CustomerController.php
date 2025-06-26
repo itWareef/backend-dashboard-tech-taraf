@@ -26,7 +26,6 @@ class CustomerController extends Controller
 
     public function register()
     {
-        dd(request()->all());
         return (new RegisterCustomer())->storeNewRecord() ;
     }
     public function delete(Customer $customer)
