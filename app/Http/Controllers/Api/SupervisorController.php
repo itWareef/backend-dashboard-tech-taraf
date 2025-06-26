@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupervisorRequests\SupervisorLoginRequest;
-use App\Http\Requests\VerifyOtpRequest;
 
+use App\Models\Requests\MaintenanceRequest;
+use App\Models\Requests\PlantingRequest;
+use App\Models\Requests\SuperVisorRequests;
 use App\Models\Supervisor;
 use App\Services\SupervisorServices\SupervisorAuthService;
 
@@ -23,10 +25,7 @@ class SupervisorController extends Controller
     {
         return (new RegisterSupervisor())->storeNewRecord() ;
     }
-    public function delete(Supervisor $supervisor)
-    {
-        return (new SupervisorDeletingService($supervisor))->delete() ;
-    }
+
     public function update(Supervisor $supervisor)
     {
         return (new SupervisorUpdatingService($supervisor))->update() ;
@@ -60,18 +59,12 @@ class SupervisorController extends Controller
         ])->get(['id' ,'name','picture'])->toArray();
         return Response::success($data);
     }
-    public function export()
-    {
-        return (new SupervisorExportService())->export();
-    }
+
     public function login(SupervisorLoginRequest $request)
     {
         return (new SupervisorAuthService())->login($request);
     }
-    public function verifyOtp(VerifyOtpRequest $request)
-    {
-        return (new SupervisorAuthService())->verifyOtp($request);
-    }
+
     public function logout(Request $request)
     {
         $request->user('Supervisor')->token()->revoke();
@@ -87,15 +80,36 @@ class SupervisorController extends Controller
         $supervisor = $request->user('Supervisor');
         return (new SupervisorUpdatingService($supervisor))->update() ;
     }
-    public function addAdress(){
-        return (new AddNewAddressToSupervisor())->storeNewRecord();
+
+    public function requests()
+    {
+        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
+        $data = QueryBuilder::for($requestType)
+            ->allowedFilters([])
+            ->whereHas('supervisors', function ($query) {
+                $query->where('status',SuperVisorRequests::PENDING);
+            })
+            ->with(['unit','project','requester'])->paginate(7);
+        return Response::success(['data' =>$data]);
     }
-    public function allAdress(){
-        $data = QueryBuilder::for(SupervisorAddress::class)
-        ->where('customer_id', auth('Supervisor')->user()->id)
-        ->with(['city','country'])
-        ->get()
-        ->toArray();
-        return Response::success($data);
+    public function requestsInProgress()
+    {
+        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
+        $data = QueryBuilder::for($requestType)
+            ->allowedFilters([])
+            ->whereHas('supervisors', function ($query) {
+                $query->where('status',SuperVisorRequests::ACCEPTED);
+            })
+            ->with(['unit','project','requester'])->paginate(7);
+        return Response::success(['data' =>$data]);
+    }
+    public function requestsFinished()
+    {
+        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
+        $data = QueryBuilder::for($requestType)
+            ->allowedFilters([])
+            ->where('status' , $requestType::FINISHED)
+            ->with(['unit','project','requester'])->paginate(7);
+        return Response::success(['data' =>$data]);
     }
 }

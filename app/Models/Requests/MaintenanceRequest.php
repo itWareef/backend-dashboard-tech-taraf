@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
 use App\Models\Customer\Customer;
+use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
 use App\Models\User;
@@ -23,7 +24,6 @@ class MaintenanceRequest extends Model implements FileUpload
         'notes',
         'status',
         'time',
-        'supervisor_id',
         'otp',
         'rating',
         'visits_count'
@@ -50,7 +50,11 @@ class MaintenanceRequest extends Model implements FileUpload
     public function unit(){
         return $this->belongsTo(Unit::class,'unit_id');
     }
-    public function supervisor(){
-        return $this->belongsTo(Supervisor::class,'supervisor_id');
+    public function project(){
+        return $this->belongsTo(Project::class,'unit_id');
+    }
+    public function supervisors()
+    {
+        return $this->hasMany(PlantingSuperVisor::class ,'planting_id');
     }
 }

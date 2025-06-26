@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CustomerController\CustomerController;
 use App\Http\Controllers\Api\OtpController;
+use App\Http\Controllers\Api\SupervisorController;
 use App\Http\Controllers\Auth\PasswordOtpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,12 +35,15 @@ Route::prefix('customer')->group(function () {
 });
 
 Route::prefix('supervisors')->group(function () {
-    Route::post('login', [\App\Http\Controllers\Api\SupervisorController::class, 'login']);
-    Route::post('register', [\App\Http\Controllers\Api\SupervisorController::class, 'register']);
-    Route::post('verify-otp', [\App\Http\Controllers\Api\SupervisorController::class, 'verifyOtp']);
-    Route::post('logout', [\App\Http\Controllers\Api\SupervisorController::class, 'logout'])->middleware(['auth:supervisor',]);
-    Route::post('update-profile', [\App\Http\Controllers\Api\SupervisorController::class, 'updateProfile'])->middleware(['auth:supervisor',]);
-    Route::get('me', [\App\Http\Controllers\Api\SupervisorController::class, 'me'])->middleware(['auth:supervisor',]);
+    Route::post('login', [SupervisorController::class, 'login']);
+    Route::post('register', [SupervisorController::class, 'register']);
+    Route::post('verify-otp', [SupervisorController::class, 'verifyOtp']);
+    Route::post('logout', [SupervisorController::class, 'logout'])->middleware(['auth:supervisor',]);
+    Route::post('update-profile', [SupervisorController::class, 'updateProfile'])->middleware(['auth:supervisor',]);
+    Route::get('me', [SupervisorController::class, 'me'])->middleware(['auth:supervisor',]);
     Route::post('/password/send-otp', [PasswordOtpController::class, 'sendOtpSuperVisors']);
     Route::post('/password/verify-otp', [PasswordOtpController::class, 'verifyOtpAndReset']);
+    Route::get('list-requests', [SupervisorController::class, 'requests'])->middleware(['auth:supervisor',]);
+    Route::get('list-requests-in-progress', [SupervisorController::class, 'requestsInProgress'])->middleware(['auth:supervisor',]);
+    Route::get('list-requests-finished', [SupervisorController::class, 'requestsFinished'])->middleware(['auth:supervisor',]);
 });

@@ -20,6 +20,7 @@ class MaintenanceRequestController extends Controller
     public function list(string $status)
     {
         $data = QueryBuilder::for(MaintenanceRequest::class)
+            ->with(['unit','project','requester'])
             ->where('status', $status)
             ->paginate(7);
         return response(['data' => $data]);

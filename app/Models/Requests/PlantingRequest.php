@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
 use App\Models\Customer\Customer;
+use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +22,6 @@ class PlantingRequest extends Model implements FileUpload
         'picture',
         'notes',
         'status',
-        'supervisor_id',
         'time',
         'otp',
         'rating',
@@ -47,9 +47,13 @@ class PlantingRequest extends Model implements FileUpload
         return $this->belongsTo(Customer::class, 'requester_id');
     }
     public function unit(){
-        return $this->belongsTo(Unit::class,'unit_id');
+        return $this->belongsTo(Unit::class,'project_id');
     }
-    public function supervisor(){
-        return $this->belongsTo(Supervisor::class,'supervisor_id');
+    public function project(){
+        return $this->belongsTo(Project::class,'unit_id');
+    }
+    public function supervisors()
+    {
+       return $this->hasMany(PlantingSuperVisor::class ,'planting_id');
     }
 }

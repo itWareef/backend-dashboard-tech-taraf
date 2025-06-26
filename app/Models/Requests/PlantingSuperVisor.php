@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models\Requests;
+
+class PlantingSuperVisor extends SuperVisorRequests
+{
+
+    protected function additionalAttributes(): array
+    {
+        return [
+            'planting_id'
+        ];
+    }
+    public function maintenance()
+    {
+        return $this->belongsTo(PlantingRequest::class,'planting_id');
+    }
+}
