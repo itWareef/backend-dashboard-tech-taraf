@@ -9,7 +9,7 @@ use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
 use App\Models\Requests\SuperVisorRequests;
 use App\Models\Supervisor;
-use App\Services\SupervisorServices\SupervisorAuthService;
+use App\Services\SuperVisorServices\SupervisorAuthService;
 
 use App\Services\SupervisorServices\SupervisorUpdatingService;
 use App\Services\SupervisorServices\RegisterSupervisor;
