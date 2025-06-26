@@ -72,7 +72,7 @@ class SupervisorController extends Controller
     }
     public function me(Request $request)
     {
-        $supervisor = $request->user('Supervisor');
+        $supervisor = $request->user('supervisor');
         return Response::success($supervisor->toArray());
     }
     public function updateProfile(Request $request)
