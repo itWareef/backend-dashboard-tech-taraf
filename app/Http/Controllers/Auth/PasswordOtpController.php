@@ -34,6 +34,26 @@ class PasswordOtpController extends Controller
 
         return Response::success(['otp' => $otp],['تم إرسال رمز التحقق إلى بريدك الإلكتروني.']);
     }
+    public function sendOtpSuperVisors(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:supervisors,email',
+        ]);
+
+        $otp = rand(1000, 9999);
+
+        PasswordOtp::updateOrCreate(
+            ['email' => $request->email],
+            [
+                'otp' => $otp,
+                'expires_at' => Carbon::now()->addMinutes(5),
+            ]
+        );
+
+        Mail::to($request->email)->send(new \App\Mail\SendPasswordOtp($otp));
+
+        return Response::success(['otp' => $otp],['تم إرسال رمز التحقق إلى بريدك الإلكتروني.']);
+    }
     public function verifyOtpAndReset(Request $request)
     {
         $request->validate([

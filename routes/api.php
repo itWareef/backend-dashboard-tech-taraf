@@ -19,6 +19,8 @@ Route::prefix('customer')->group(function () {
     Route::post('register', [CustomerController::class, 'register']);
     Route::post('verify-otp', [CustomerController::class, 'verifyOtp']);
     Route::post('logout', [CustomerController::class, 'logout'])->middleware(['auth:customer',]);
+    Route::post('update-profile', [CustomerController::class, 'updateProfile'])->middleware(['auth:customer',]);
+    Route::get('me', [CustomerController::class, 'me'])->middleware(['auth:customer',]);
     Route::post('/password/send-otp', [PasswordOtpController::class, 'sendOtp']);
     Route::post('/password/verify-otp', [PasswordOtpController::class, 'verifyOtpAndReset']);
     Route::post('maintenance-request', [\App\Http\Controllers\MaintenanceRequestController::class ,'store'])->middleware(['auth:customer',]);
@@ -29,4 +31,15 @@ Route::prefix('customer')->group(function () {
     Route::get('planting-request/{status}', [\App\Http\Controllers\PlantingRequestController::class ,'list'])->middleware(['auth:customer',]);
     Route::get('units', [\App\Http\Controllers\UnitController::class ,'listForCustomer'])->middleware(['auth:customer',]);
     Route::get('projects', [\App\Http\Controllers\UnitController::class ,'listProjectsForCustomer'])->middleware(['auth:customer',]);
+});
+
+Route::prefix('supervisors')->group(function () {
+    Route::post('login', [\App\Http\Controllers\Api\SupervisorController::class, 'login']);
+    Route::post('register', [\App\Http\Controllers\Api\SupervisorController::class, 'register']);
+    Route::post('verify-otp', [\App\Http\Controllers\Api\SupervisorController::class, 'verifyOtp']);
+    Route::post('logout', [\App\Http\Controllers\Api\SupervisorController::class, 'logout'])->middleware(['auth:supervisor',]);
+    Route::post('update-profile', [\App\Http\Controllers\Api\SupervisorController::class, 'updateProfile'])->middleware(['auth:supervisor',]);
+    Route::get('me', [\App\Http\Controllers\Api\SupervisorController::class, 'me'])->middleware(['auth:supervisor',]);
+    Route::post('/password/send-otp', [PasswordOtpController::class, 'sendOtpSuperVisors']);
+    Route::post('/password/verify-otp', [PasswordOtpController::class, 'verifyOtpAndReset']);
 });

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\CustomerRequests;
+namespace App\Http\Requests\SupervisorRequests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CustomerLoginRequest extends FormRequest
+class SupervisorLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class CustomerLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'email' , 'exists:customers,email'],
+            'email'    => ['required', 'email' , 'exists:supervisors,email'],
             'password' => ['required' ]
         ];
     }

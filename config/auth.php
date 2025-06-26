@@ -47,7 +47,11 @@ return [
         'customer' =>[
             'driver' => 'passport',
             'provider' => 'customers',
-        ]
+        ],
+        'supervisor' =>[
+            'driver' => 'passport',
+            'provider' => 'supervisors',
+        ],
     ],
 
     /*
@@ -77,6 +81,10 @@ return [
              'driver' => 'eloquent',
              'model' => \App\Models\Customer\Customer::class,
          ],
+        'supervisors' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\Supervisor::class,
+        ],
     ],
 
     /*

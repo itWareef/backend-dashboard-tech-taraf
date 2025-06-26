@@ -31,9 +31,11 @@ class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(Carbon::now()->addDays(30));
         Passport::tokensCan([
             'customer' => 'Access customer Backend',
+            'supervisor' => 'Access supervisor Backend',
             'api' => 'Access API Backend',
         ]);
         Passport::setDefaultScope([
+            'supervisor',
             'customer',
             'api'
         ]);

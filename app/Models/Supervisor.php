@@ -11,7 +11,7 @@ use Laravel\Passport\HasApiTokens;
 class Supervisor extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory , Notifiable,HasApiTokens;
+    use HasFactory , Notifiable,HasApiTokens ,HandleToArrayTrait;
     protected $fillable = [
         'name',
         'first_name',

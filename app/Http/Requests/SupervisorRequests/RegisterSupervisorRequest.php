@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\CustomerRequests;
+namespace App\Http\Requests\SupervisorRequests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterCustomerRequest extends FormRequest
+class RegisterSupervisorRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,8 @@ class RegisterCustomerRequest extends FormRequest
         return [
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:customers,email'],
-            'phone' => ['required', 'string', 'unique:customers,phone'],
+            'email' => ['required', 'email', 'unique:supervisors,email'],
+            'phone' => ['required', 'string', 'unique:supervisors,phone'],
             'password' => ['required', 'confirmed','string', 'min:8'],
         ];
     }

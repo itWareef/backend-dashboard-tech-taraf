@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\CustomerRequests;
+namespace App\Http\Requests\SupervisorRequests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CustomerUpdatingRequest extends FormRequest
+class SupervisorUpdatingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +27,7 @@ class CustomerUpdatingRequest extends FormRequest
             'first_name' => ['required_if:first_name,null', 'string', 'max:255'],
             'last_name' => ['required_if:last_name,null', 'string', 'max:255'],
             'phone' => ['required_if:phone,null', 'string', 'max:15',],
-            'email' => ['required_if:email,null',Rule::unique('customers','email')->ignore(auth('customer')->id()), 'email'],
+            'email' => ['required_if:email,null',Rule::unique('supervisors','email')->ignore(auth('customer')->id()), 'email'],
         ];
     }
 

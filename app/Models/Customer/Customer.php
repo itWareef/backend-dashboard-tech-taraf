@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Models\HandleToArrayTrait;
 use App\Models\Project\Unit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +12,7 @@ use Laravel\Passport\HasApiTokens;
 class Customer extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory , Notifiable,HasApiTokens;
+    use HasFactory , Notifiable,HasApiTokens ,HandleToArrayTrait;
     protected $fillable = [
         'name',
         'first_name',

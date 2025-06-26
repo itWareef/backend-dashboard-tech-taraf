@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Services\CustomerServices;
+namespace App\Services\SuperVisorServices;
 
 use App\Core\Classes\StoringData\AbstractClassHandleStoreData;
 use App\Http\Requests\CustomerRequests\RegisterCustomerRequest;
 use App\Models\Customer\Customer;
+use App\Models\Supervisor;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterCustomer extends AbstractClassHandleStoreData
+class RegisterSupervisor extends AbstractClassHandleStoreData
 {
 
     public function model(): string
     {
-        return Customer::class;
+        return Supervisor::class;
     }
 
     public function requestFile(): string

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Services\CustomerServices;
+namespace App\Services\SuperVisorServices;
 
 use App\Core\Classes\UpdatingData\AbstractClassHandleUpdate;
-use App\Http\Requests\CustomerRequests\CustomerUpdatingRequest;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\SupervisorRequests\SupervisorUpdatingRequest;
 
 
-class CustomerUpdatingService extends AbstractClassHandleUpdate
+class SuperVisorUpdatingService extends AbstractClassHandleUpdate
 {
 
     public function messageSuccessAction(): string
@@ -17,7 +16,7 @@ class CustomerUpdatingService extends AbstractClassHandleUpdate
 
     function requestFile(): string
     {
-        return CustomerUpdatingRequest::class;
+        return SupervisorUpdatingRequest::class;
     }
     protected function getDataHandle(): array
     {
