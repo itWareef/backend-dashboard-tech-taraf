@@ -8,6 +8,7 @@ use App\Http\Requests\SupervisorRequests\AnotherVisitRequestRequest;
 use App\Http\Requests\SupervisorRequests\SupervisorLoginRequest;
 
 use App\Http\Requests\SupervisorRequests\UpdatingRequestRequest;
+use App\Http\Requests\VerifyOtpRequest;
 use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
 use App\Models\Requests\SuperVisorRequests;
@@ -68,6 +69,10 @@ class SupervisorController extends Controller
     public function login(SupervisorLoginRequest $request)
     {
         return (new SupervisorAuthService())->login($request);
+    }
+    public function verifyOtp(VerifyOtpRequest $request)
+    {
+        return (new SupervisorAuthService())->verifyOtp($request);
     }
 
     public function logout(Request $request)

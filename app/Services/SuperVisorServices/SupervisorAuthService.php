@@ -2,12 +2,10 @@
 
 namespace App\Services\SuperVisorServices;
 
-use App\Http\Requests\CustomerRequests\CustomerLoginRequest;
 use App\Http\Requests\SupervisorRequests\SupervisorLoginRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Mail\CustomerOtpMail;
-use App\Models\Customer\Customer;
-use App\Models\Customer\CustomerOtp;
+use App\Models\Customer\EmailOtp;
 use App\Models\Supervisor;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -29,18 +27,17 @@ class SupervisorAuthService
             return Response::error('البريد الإلكتروني أو كلمة المرور غير صحيحة', 401);
         }
 
+        $otp = rand(1000, 9999);
+        $this->storeOtpInDb($customer, $otp);
+        $this->sendOtpEmail($customer->email, $otp);
+        return Response::success(['otp' => $otp], [ 'تم إرسال رمز التحقق إلى بريدك الإلكتروني' ,], 200);
 
-        $token = $customer->createToken('authToken', ['supervisor'])->accessToken;
-        return Response::success([
-            'token' => $token,
-            'user' => $customer
-        ], ['تم تسجيل الدخول بنجاح'], 200);
     }
 
-    private function storeOtpInDb(Customer $customer, string $otp): void
+    private function storeOtpInDb(Supervisor $customer, string $otp): void
     {
-        CustomerOtp::create([
-            'customer_id' => $customer->id,
+        EmailOtp::create([
+            'email' => $customer->email,
             'otp' => $otp,
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
@@ -73,7 +70,35 @@ class SupervisorAuthService
     {
         return Supervisor::where('email', $email)->first();
     }
+    public function verifyOtp(VerifyOtpRequest $request)
+    {
+        $email = $request->email;
+        $otp = $request->otp;
 
+        $supervisor = Supervisor::where('email', $email)->first();
+        if (!$supervisor) {
+            return Response::error('المستخدم غير موجود', 404);
+        }
+
+        $record = EmailOtp::where('email', $email)
+            ->where('otp', $otp)
+            ->where('expires_at', '>', now())
+            ->latest()
+            ->first();
+
+        if (!$record) {
+            return Response::error('رمز التحقق غير صالح أو منتهي', 401);
+        }
+
+        // حذف كل الرموز القديمة
+//        CustomerOtp::where('customer_id', $customer->id)->delete();
+
+        $token = $supervisor->createToken('authToken', ['supervisor'])->accessToken;
+        return Response::success([
+            'token' => $token,
+            'user' => $supervisor
+        ], ['تم تسجيل الدخول بنجاح'], 200);
+    }
     /**
      * Verify password
      *
