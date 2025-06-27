@@ -46,4 +46,9 @@ Route::prefix('supervisors')->group(function () {
     Route::get('list-requests', [SupervisorController::class, 'requests'])->middleware(['auth:supervisor',]);
     Route::get('list-requests-in-progress', [SupervisorController::class, 'requestsInProgress'])->middleware(['auth:supervisor',]);
     Route::get('list-requests-finished', [SupervisorController::class, 'requestsFinished'])->middleware(['auth:supervisor',]);
+    Route::middleware('auth:supervisor')->group(function () {
+        Route::post('{id}/accept-or-reject', [SupervisorController::class, 'acceptOrReject']);
+        Route::post('{id}/finish', [SupervisorController::class, 'finishedRequest']);
+        Route::post('{id}/another-visit', [SupervisorController::class, 'anotherVisit']);
+    });
 });

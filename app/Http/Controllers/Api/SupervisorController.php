@@ -3,17 +3,22 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SupervisorRequests\AcceptOrRejectRequestRequest;
+use App\Http\Requests\SupervisorRequests\AnotherVisitRequestRequest;
 use App\Http\Requests\SupervisorRequests\SupervisorLoginRequest;
 
+use App\Http\Requests\SupervisorRequests\UpdatingRequestRequest;
 use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
 use App\Models\Requests\SuperVisorRequests;
 use App\Models\Supervisor;
 use App\Services\SuperVisorServices\SupervisorAuthService;
 
+use App\Services\SuperVisorServices\SuperVisorUpdatingRequestService;
 use App\Services\SupervisorServices\SupervisorUpdatingService;
 use App\Services\SupervisorServices\RegisterSupervisor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -143,5 +148,64 @@ class SupervisorController extends Controller
             })
             ->with(['unit','project','requester'])->paginate(7);
         return Response::success(['data' =>$data]);
+    }
+
+    protected function getRequestModel()
+    {
+        $supervisor = auth('supervisor')->user();
+        return $supervisor->type === 'planting' ? PlantingRequest::class : MaintenanceRequest::class;
+    }
+
+    public function acceptOrReject(AcceptOrRejectRequestRequest $request, int $id)
+    {
+        $supervisor = auth('supervisor')->user();
+        $requestType = $this->getRequestModel();
+        $object = $requestType::findOrFail($id);
+
+        $status = $request->status === SuperVisorRequests::ACCEPTED
+            ? SuperVisorRequests::ACCEPTED
+            : SuperVisorRequests::REJECTED;
+
+        DB::transaction(function () use ($object, $requestType, $status , $supervisor) {
+            $object->supervisors()
+                ->where('supervisor_id', $supervisor->id)
+                ->update(['status' => $status]);
+
+            $object->superVisorVisits()->create([
+                'supervisor_id' => $supervisor->id
+            ]);
+        });
+
+        return Response::success([], ['تم استقبال ردك على الطلب']);
+    }
+
+    public function finishedRequest(UpdatingRequestRequest $request, int $id)
+    {
+        $supervisor = auth('supervisor')->user();
+        $requestType = $this->getRequestModel();
+        $object = $requestType::findOrFail($id);
+
+        if ($request->otp !== $object->otp) {
+            return Response::error('رمز التحقق لا يطابق');
+        }
+
+        $object->status = $requestType::WAITING_RATING;
+        $object->save();
+
+        $object->load(['supervisors']);
+        return (new SuperVisorUpdatingRequestService($object->supervisors))->update();
+    }
+
+    public function anotherVisit(AnotherVisitRequestRequest $request, int $id)
+    {
+        $supervisor = auth('supervisor')->user();
+        $requestType = $this->getRequestModel();
+        $object = $requestType::findOrFail($id);
+
+        $object->superVisorVisits()
+            ->where('supervisor_id', $supervisor->id)
+            ->update(['reason' => $request->reason]);
+
+        return Response::success([], ['تم ارسال طلب زيارة بنجاح']);
     }
 }

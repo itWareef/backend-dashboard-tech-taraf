@@ -54,6 +54,6 @@ class PlantingRequest extends Model implements FileUpload
     }
     public function supervisors()
     {
-       return $this->hasMany(PlantingSuperVisor::class ,'planting_id');
+       return $this->hasOne(PlantingSuperVisor::class ,'planting_id');
     }
 }
