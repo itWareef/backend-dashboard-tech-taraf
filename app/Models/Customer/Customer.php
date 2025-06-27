@@ -3,6 +3,7 @@
 namespace App\Models\Customer;
 
 use App\Models\HandleToArrayTrait;
+use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -49,4 +50,16 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Unit::class,'owner_id');
     }
+    public function projects()
+    {
+        return $this->hasManyThrough(
+            Project::class,     // الجدول النهائي اللي عايزه
+            Unit::class,        // الجدول الوسيط
+            'owner_id',         // المفتاح الأجنبي في جدول units الذي يشير إلى customers.id
+            'id',               // المفتاح الأساسي في جدول projects الذي units.project_id بيشاور عليه
+            'id',               // المفتاح الأساسي في جدول customers
+            'project_id'        // المفتاح الأجنبي في جدول units الذي يشير إلى projects.id
+        );
+    }
+
 }
