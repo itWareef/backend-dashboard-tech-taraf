@@ -8,6 +8,7 @@ use App\Http\Requests\VendorRequests\VendorAdminLoginRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Models\AuthenticationModule\Customer\CustomerAddress;
 use App\Models\Customer\Customer;
+use App\Models\Project\Contract;
 use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
 use App\Services\AddNewAddressToCustomer;
@@ -91,6 +92,8 @@ class CustomerController extends Controller
 
         $data['maintenance'] = $this->getRequestStats(MaintenanceRequest::class, $customer->id);
         $data['planting'] = $this->getRequestStats(PlantingRequest::class, $customer->id);
+        $data['end_contract_planting'] = Contract::where('customer_id', $customer->id)->where('type','planting')->first()?->end_date;
+        $data['end_maintenance_planting'] = Contract::where('customer_id', $customer->id)->where('type','maintenance')->first()?->end_date;
 
         return Response::success($data);
     }

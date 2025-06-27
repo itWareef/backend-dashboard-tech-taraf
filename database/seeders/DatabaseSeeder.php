@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Customer\Customer;
 use App\Models\Developer;
+use App\Models\Project\Contract;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'count' => 80,
             'place' => 'ksa'
         ]);
-        Unit::create([
+        $unit = Unit::create([
             'owner_id' => $owner->id,
             'project_id' => $project->id,
             'villa_number'  => '852262',
@@ -45,6 +46,20 @@ class DatabaseSeeder extends Seeder
             'number' => '215165'
         ]);
 
+        Contract::create([
+            'unit_id' => $unit->id,
+            'customer_id' => $owner->id,
+            'start_date' => '2025-06-26',
+            'end_date'=> '2025-06-30',
+            'type' => 'maintenance'
+        ]);
+        Contract::create([
+            'unit_id' => $unit->id,
+            'customer_id' => $owner->id,
+            'start_date' => '2025-06-26',
+            'end_date'=> '2025-06-30',
+            'type' => 'planting'
+        ]);
         Supervisor::create([
             'name' => 'Test User',
             'first_name' => 'Test',
