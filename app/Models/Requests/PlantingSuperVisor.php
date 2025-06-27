@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 class PlantingSuperVisor extends SuperVisorRequests
 {
+    protected $table ='spervisor_planting_request';
 
     protected function additionalAttributes(): array
     {

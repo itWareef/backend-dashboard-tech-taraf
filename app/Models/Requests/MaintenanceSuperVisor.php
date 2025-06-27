@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 class MaintenanceSuperVisor extends SuperVisorRequests
 {
+    protected $table ='spervisor_maintenance_request';
 
     protected function additionalAttributes(): array
     {
