@@ -77,7 +77,7 @@ class SupervisorController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user('Supervisor')->token()->revoke();
+        $request->user('supervisor')->token()->revoke();
         return Response::success([], ['Successfully logged out'] , 200);
     }
     public function me(Request $request)
@@ -102,6 +102,13 @@ class SupervisorController extends Controller
                 ->count(),
         ];
 
+        $data['rating'] = QueryBuilder::for($requestType)
+            ->where('status', $requestType::FINISHED)
+            ->whereHas('supervisors', function ($query) use ($supervisorId) {
+                $query->where('status', SuperVisorRequests::ACCEPTED)
+                    ->where('supervisor_id', $supervisorId);
+            })
+            ->avg('rating')??0;
         return Response::success($data);
     }
 
@@ -117,7 +124,7 @@ class SupervisorController extends Controller
 
     public function updateProfile(Request $request)
     {
-        $supervisor = $request->user('Supervisor');
+        $supervisor = $request->user('supervisor');
         return (new SupervisorUpdatingService($supervisor))->update() ;
     }
 
