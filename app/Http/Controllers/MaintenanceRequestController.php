@@ -23,7 +23,7 @@ class MaintenanceRequestController extends Controller
             ->with(['unit','project','requester'])
             ->where('status', $status)
             ->where('requester_id', auth('customer')->id())
-            ->paginate(7);
+            ->get();
         return response(['data' => $data]);
     }
 

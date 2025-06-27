@@ -124,7 +124,7 @@ class SupervisorController extends Controller
             ->whereHas('supervisors', function ($query) {
                 $query->where('status',SuperVisorRequests::PENDING)->where('supervisor_id',auth('supervisor')->id());
             })
-            ->with(['unit','project','requester'])->paginate(7);
+            ->with(['unit','project','requester'])->get();
         return Response::success(['data' =>$data]);
     }
     public function requestsInProgress()
@@ -135,7 +135,7 @@ class SupervisorController extends Controller
             ->whereHas('supervisors', function ($query) {
                 $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
             })
-            ->with(['unit','project','requester'])->paginate(7);
+            ->with(['unit','project','requester'])->get();
         return Response::success(['data' =>$data]);
     }
     public function requestsFinished()
@@ -146,7 +146,7 @@ class SupervisorController extends Controller
             ->where('status' , $requestType::FINISHED)->whereHas('supervisors', function ($query) {
                 $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
             })
-            ->with(['unit','project','requester'])->paginate(7);
+            ->with(['unit','project','requester'])->get();
         return Response::success(['data' =>$data]);
     }
 

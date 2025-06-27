@@ -27,7 +27,7 @@ class PlantingRequestController extends Controller
         $data = QueryBuilder::for(PlantingRequest::class)
             ->with(['unit','project','requester'])
             ->where('status', $status)
-            ->paginate(7);
+            ->get();
         return response(['data' => $data]);
     }
 
