@@ -4,6 +4,7 @@ namespace App\Http\Requests\CustomerRequests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterCustomerRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class RegisterCustomerRequest extends FormRequest
         return [
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:customers,email'],
+            'email' => ['required', 'email',Rule::unique('customers','email')],
             'phone' => ['required', 'string', 'unique:customers,phone'],
             'password' => ['required', 'confirmed','string', 'min:8'],
         ];
