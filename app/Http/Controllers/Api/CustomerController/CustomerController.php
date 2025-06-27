@@ -87,7 +87,7 @@ class CustomerController extends Controller
     }
     public function me(Request $request)
     {
-        $customer = $request->user('customer')->load(['projects','units']);
+        $customer = $request->user('customer')->load(['projects.units',]);
         $data = $customer->toArray();
 
         $data['maintenance'] = $this->getRequestStats(MaintenanceRequest::class, $customer->id);
