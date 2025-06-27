@@ -22,6 +22,7 @@ class MaintenanceRequestController extends Controller
         $data = QueryBuilder::for(MaintenanceRequest::class)
             ->with(['unit','project','requester'])
             ->where('status', $status)
+            ->where('requester_id', auth('customer')->id())
             ->paginate(7);
         return response(['data' => $data]);
     }

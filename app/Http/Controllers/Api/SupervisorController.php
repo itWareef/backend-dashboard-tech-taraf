@@ -73,8 +73,38 @@ class SupervisorController extends Controller
     public function me(Request $request)
     {
         $supervisor = $request->user('supervisor');
-        return Response::success($supervisor->toArray());
+        $data = $supervisor->toArray();
+        $supervisorId = $supervisor->id;
+
+        $requestType = $supervisor->type === 'planting'
+            ? PlantingRequest::class
+            : MaintenanceRequest::class;
+
+        $data['counting'] = [
+            'requests' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::PENDING),
+            'in_progress' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::ACCEPTED),
+            'finished' => QueryBuilder::for($requestType)
+                ->where('status', $requestType::FINISHED)
+                ->whereHas('supervisors', function ($query) use ($supervisorId) {
+                    $query->where('status', SuperVisorRequests::ACCEPTED)
+                        ->where('supervisor_id', $supervisorId);
+                })
+                ->count(),
+        ];
+
+        return Response::success($data);
     }
+
+    private function getSupervisorRequestCount(string $modelClass, int $supervisorId, string $status): int
+    {
+        return QueryBuilder::for($modelClass)
+            ->whereHas('supervisors', function ($query) use ($status, $supervisorId) {
+                $query->where('status', $status)
+                    ->where('supervisor_id', $supervisorId);
+            })
+            ->count();
+    }
+
     public function updateProfile(Request $request)
     {
         $supervisor = $request->user('Supervisor');
@@ -87,7 +117,7 @@ class SupervisorController extends Controller
         $data = QueryBuilder::for($requestType)
             ->allowedFilters([])
             ->whereHas('supervisors', function ($query) {
-                $query->where('status',SuperVisorRequests::PENDING);
+                $query->where('status',SuperVisorRequests::PENDING)->where('supervisor_id',auth('supervisor')->id());
             })
             ->with(['unit','project','requester'])->paginate(7);
         return Response::success(['data' =>$data]);
@@ -98,7 +128,7 @@ class SupervisorController extends Controller
         $data = QueryBuilder::for($requestType)
             ->allowedFilters([])
             ->whereHas('supervisors', function ($query) {
-                $query->where('status',SuperVisorRequests::ACCEPTED);
+                $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
             })
             ->with(['unit','project','requester'])->paginate(7);
         return Response::success(['data' =>$data]);
@@ -108,7 +138,9 @@ class SupervisorController extends Controller
         $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
         $data = QueryBuilder::for($requestType)
             ->allowedFilters([])
-            ->where('status' , $requestType::FINISHED)
+            ->where('status' , $requestType::FINISHED)->whereHas('supervisors', function ($query) {
+                $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
+            })
             ->with(['unit','project','requester'])->paginate(7);
         return Response::success(['data' =>$data]);
     }

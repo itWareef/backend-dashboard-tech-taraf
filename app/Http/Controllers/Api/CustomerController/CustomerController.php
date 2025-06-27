@@ -8,6 +8,8 @@ use App\Http\Requests\VendorRequests\VendorAdminLoginRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Models\AuthenticationModule\Customer\CustomerAddress;
 use App\Models\Customer\Customer;
+use App\Models\Requests\MaintenanceRequest;
+use App\Models\Requests\PlantingRequest;
 use App\Services\AddNewAddressToCustomer;
 use App\Services\CustomerServices\CustomerAuthService;
 use App\Services\CustomerServices\CustomerDeletingService;
@@ -85,8 +87,34 @@ class CustomerController extends Controller
     public function me(Request $request)
     {
         $customer = $request->user('customer');
-        return Response::success($customer->toArray());
+        $data = $customer->toArray();
+
+        $data['maintenance'] = $this->getRequestStats(MaintenanceRequest::class, $customer->id);
+        $data['planting'] = $this->getRequestStats(PlantingRequest::class, $customer->id);
+
+        return Response::success($data);
     }
+
+    private function getRequestStats(string $modelClass, int $requesterId): array
+    {
+        return [
+            'finished' => QueryBuilder::for($modelClass)
+                ->where('status', $modelClass::FINISHED)
+                ->where('requester_id', $requesterId)
+                ->count(),
+
+            'in_progress' => QueryBuilder::for($modelClass)
+                ->where('status', $modelClass::IN_PROGRESS)
+                ->where('requester_id', $requesterId)
+                ->count(),
+
+            'waiting_review' => QueryBuilder::for($modelClass)
+                ->where('status', $modelClass::WAITING_RATING)
+                ->where('requester_id', $requesterId)
+                ->count(),
+        ];
+    }
+
     public function updateProfile(Request $request)
     {
         $customer = $request->user('customer');
