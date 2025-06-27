@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Customer\Customer;
 use App\Models\PasswordOtp;
+use App\Models\Supervisor;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,7 +72,7 @@ class PasswordOtpController extends Controller
 
         // إعادة تعيين كلمة المرور
         DB::transaction(function () use ($record , $request) {
-            $user = Customer::where('email', $record->email)->first();
+            $user = Customer::where('email', $record->email)->first() ?? Supervisor::where('email', $record->email)->first();
             $user->password = Hash::make($request->password);
             $user->save();
 
