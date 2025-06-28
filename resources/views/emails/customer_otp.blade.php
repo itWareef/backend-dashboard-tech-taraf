@@ -40,7 +40,7 @@
         }
 
         .email-header {
-            background-color: #3498db;
+            background-color: #008E7B;
             color: white;
             padding: 25px;
             text-align: center;
@@ -56,7 +56,7 @@
         }
 
         .otp-display {
-            background-color: #f1f9ff;
+            background-color: #F1F2F2;
             border-radius: 10px;
             padding: 25px;
             margin: 25px 0;
@@ -66,7 +66,7 @@
         .otp-code {
             font-size: 36px;
             font-weight: bold;
-            color: #2c3e50;
+            color: #008E7B;
             letter-spacing: 5px;
             margin: 15px 0;
         }
@@ -87,21 +87,10 @@
 
         .email-footer {
             background-color: #f5f5f5;
-            padding: 20px;
+            padding: 5px;
             text-align: center;
             font-size: 12px;
             color: #7f8c8d;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-weight: bold;
-            margin: 15px 0;
         }
 
         .illustration {
@@ -120,15 +109,15 @@
     <!-- شعار الشركة -->
     <div class="logo-header">
         <!-- Replace with your actual logo URL -->
-        <img src="https://api.taraf.dashboard-tech.com/images/Taraf-logo-01.png" alt="شعار شركة ترف" style="height: 60px;">
+        <img src="https://api.taraf.dashboard-tech.com/images/logo taraf 70x70P.png" alt="شعار شركة ترف" style="height: 60px;">
     </div>
 
-    <div class="email-header">
+    <div class="email-header"  dir="rtl">
         <h1>رمز التحقق الخاص بك</h1>
     </div>
 
-    <div class="email-body">
-        <div class="illustration">
+    <div class="email-body" dir="rtl" >
+        <div class="illustration" dir="rtl">
             <!-- رمز توضيحي -->
             <svg width="120" height="120" viewBox="0 0 24 24" fill="none"
                  xmlns="http://www.w3.org/2000/svg">
@@ -139,21 +128,21 @@
             </svg>
         </div>
 
-        <p class="instructions">مرحبًا،</p>
-        <p class="instructions">لقد طلبت رمز تحقق لتأكيد بريدك الإلكتروني. استخدم الرمز التالي:</p>
+        <p class="instructions" dir="rtl">مرحبًا عميلنا العزيز،</p>
+        <p class="instructions" dir="rtl">لقد طلبت رمز تحقق لتأكيد بريدك الإلكتروني. استخدم الرمز التالي:</p>
 
-        <div class="otp-display">
+        <div class="otp-display" dir="rtl">
             <div class="otp-code">{{ $otp }}</div>
-            <p>هذا الرمز صالح لمدة 5 دقائق فقط</p>
+            <p dir="rtl" style="color: #003A42">هذا الرمز صالح لمدة 5 دقائق فقط</p>
         </div>
 
-        <p class="instructions">إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة أو إبلاغنا فورًا.</p>
+        <p class="instructions" dir="rtl">إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة أو إبلاغنا فورًا.</p>
 
-        <p class="note">لحماية حسابك، لا تشارك هذا الرمز مع أي شخص.</p>
+        <p class="note" dir="rtl">لحماية حسابك، لا تشارك هذا الرمز مع أي شخص.</p>
     </div>
 
-    <div class="email-footer">
-        <p>© 2025 شركتك. جميع الحقوق محفوظة لشركة ترف للتسويق العقاري.</p>
+    <div class="email-footer" dir="rtl">
+        <p> جميع الحقوق محفوظة لشركة ترف للتسويق العقاري ©2025 </p>
     </div>
 </div>
 </body>
