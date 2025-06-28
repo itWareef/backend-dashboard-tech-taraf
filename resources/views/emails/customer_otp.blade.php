@@ -109,7 +109,7 @@
     <!-- شعار الشركة -->
     <div class="logo-header">
         <!-- Replace with your actual logo URL -->
-        <img src="https://api.taraf.dashboard-tech.com/images/logo taraf 70x70P.png" alt="شعار شركة ترف" style="height: 60px;">
+        <img src="https://api.taraf.dashboard-tech.com/images/logo-taraf-70x70P.png" alt="شعار شركة ترف" style="height: 60px;">
     </div>
 
     <div class="email-header"  dir="rtl">
