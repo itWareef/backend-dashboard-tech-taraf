@@ -28,11 +28,15 @@
             padding: 20px;
             text-align: right;
             border-bottom: 1px solid #eee;
+            direction: rtl;
         }
 
         .logo-header img {
-            max-height: 60px;
+            height: 60px;
             width: auto;
+            display: block;
+            margin-right: 0;
+            margin-left: auto;
         }
 
         .email-header {
@@ -115,7 +119,8 @@
 <div class="email-container">
     <!-- شعار الشركة -->
     <div class="logo-header">
-        <img src="{{ asset('images/Taraf-logo-01.png') }}" alt="شعار الشركة">
+        <!-- Replace with your actual logo URL -->
+        <img src="https://api.taraf.dashboard-tech.com/images/Taraf-logo-01.png" alt="شعار شركة ترف" style="height: 60px;">
     </div>
 
     <div class="email-header">
