@@ -23,6 +23,7 @@ class MaintenanceRequest extends Model implements FileUpload
         'project_id',
         'date',
         'picture',
+        'phone',
         'notes',
         'status',
         'time',

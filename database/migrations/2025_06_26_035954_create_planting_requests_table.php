@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->string('picture')->nullable();
             $table->string('time')->nullable();
+            $table->string('phone')->nullable();
             $table->string('otp')->nullable();
             $table->text('notes')->nullable();
             $table->double('rating')->nullable();

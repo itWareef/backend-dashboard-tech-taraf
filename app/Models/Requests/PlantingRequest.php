@@ -20,6 +20,7 @@ class PlantingRequest extends Model implements FileUpload
         'unit_id',
         'date',
         'picture',
+        'phone',
         'notes',
         'status',
         'time',
