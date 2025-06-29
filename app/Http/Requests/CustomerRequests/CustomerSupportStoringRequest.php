@@ -24,7 +24,7 @@ class CustomerSupportStoringRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'note'      =>['required','sting' ,],
+            'note'      =>['required','string' ,],
 
         ];
     }
