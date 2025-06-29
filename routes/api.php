@@ -33,7 +33,7 @@ Route::prefix('customer')->group(function () {
     Route::get('planting-request/{status}', [\App\Http\Controllers\PlantingRequestController::class ,'list'])->middleware(['auth:customer',]);
     Route::get('units', [\App\Http\Controllers\UnitController::class ,'listForCustomer'])->middleware(['auth:customer',]);
     Route::get('projects', [\App\Http\Controllers\UnitController::class ,'listProjectsForCustomer'])->middleware(['auth:customer',]);
-    Route::post('support',[CustomerController::class, 'support']);
+    Route::post('support',[CustomerController::class, 'support'])->middleware(['auth:customer',]);
 });
 
 Route::prefix('supervisors')->group(function () {
