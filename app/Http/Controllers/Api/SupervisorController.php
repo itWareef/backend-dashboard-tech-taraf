@@ -91,8 +91,8 @@ class SupervisorController extends Controller
             : MaintenanceRequest::class;
 
         $data['counting'] = [
-            'requests' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::PENDING),
-            'in_progress' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::ACCEPTED),
+            'requests' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::PENDING, $requestType::IN_PROGRESS),
+            'in_progress' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::ACCEPTED, $requestType::IN_PROGRESS),
             'finished' => QueryBuilder::for($requestType)
                 ->where('status', $requestType::FINISHED)
                 ->whereHas('supervisors', function ($query) use ($supervisorId) {
@@ -112,9 +112,10 @@ class SupervisorController extends Controller
         return Response::success($data);
     }
 
-    private function getSupervisorRequestCount(string $modelClass, int $supervisorId, string $status): int
+    private function getSupervisorRequestCount(string $modelClass, int $supervisorId, string $status , string$status2): int
     {
         return QueryBuilder::for($modelClass)
+            ->where('status', $status2)
             ->whereHas('supervisors', function ($query) use ($status, $supervisorId) {
                 $query->where('status', $status)
                     ->where('supervisor_id', $supervisorId);
