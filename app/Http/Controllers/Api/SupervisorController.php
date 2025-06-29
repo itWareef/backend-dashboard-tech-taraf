@@ -144,6 +144,7 @@ class SupervisorController extends Controller
         $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
         $data = QueryBuilder::for($requestType)
             ->allowedFilters([])
+            ->where('status' , $requestType::IN_PROGRESS)
             ->whereHas('supervisors', function ($query) {
                 $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
             })
