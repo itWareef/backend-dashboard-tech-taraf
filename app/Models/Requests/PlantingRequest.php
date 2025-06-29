@@ -7,8 +7,10 @@ use App\Models\Customer\Customer;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
+use App\Models\SuperVisorVisit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class PlantingRequest extends Model implements FileUpload
 {
@@ -17,6 +19,7 @@ class PlantingRequest extends Model implements FileUpload
     protected $fillable=[
         'requester_id',
         'project_id',
+        'category_id',
         'unit_id',
         'date',
         'picture',
@@ -56,5 +59,9 @@ class PlantingRequest extends Model implements FileUpload
     public function supervisors()
     {
        return $this->hasOne(PlantingSuperVisor::class ,'planting_id');
+    }
+    public function superVisorVisits(): MorphMany
+    {
+        return $this->morphMany(SuperVisorVisit::class, 'request');
     }
 }
