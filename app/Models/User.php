@@ -3,12 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Core\Interfaces\FileUpload;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable,HasApiTokens,HandleToArrayTrait;
@@ -24,9 +25,20 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
+        'picture',
         'phone'
     ];
+    public function documentFullPathStore(): string
+    {
+        return 'customers/';
+    }
 
+    public function requestKeysForFile(): array
+    {
+        return [
+            'picture'
+        ];
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

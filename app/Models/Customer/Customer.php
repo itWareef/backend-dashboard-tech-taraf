@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Core\Interfaces\FileUpload;
 use App\Models\HandleToArrayTrait;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
@@ -10,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory , Notifiable,HasApiTokens ,HandleToArrayTrait;
@@ -62,4 +63,15 @@ class Customer extends Authenticatable
         );
     }
 
+    public function documentFullPathStore(): string
+    {
+       return 'customers/';
+    }
+
+    public function requestKeysForFile(): array
+    {
+        return [
+            'picture'
+        ];
+    }
 }

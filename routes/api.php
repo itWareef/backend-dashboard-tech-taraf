@@ -57,4 +57,6 @@ Route::prefix('supervisors')->group(function () {
 Route::prefix('admins')->group(function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::post('logout', [AdminController::class, 'logout'])->middleware(['auth:api',]);
+    Route::post('update-profile', [AdminController::class, 'update'])->middleware(['auth:api',]);
+    Route::get('me', [AdminController::class, 'me'])->middleware(['auth:api',]);
 });
