@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\CustomerController\CustomerController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\SupervisorController;
@@ -51,4 +52,8 @@ Route::prefix('supervisors')->group(function () {
         Route::post('{id}/finish', [SupervisorController::class, 'finishedRequest']);
         Route::post('{id}/another-visit', [SupervisorController::class, 'anotherVisit']);
     });
+});
+Route::prefix('admins')->group(function () {
+    Route::post('login', [AdminController::class, 'login']);
+    Route::post('logout', [AdminController::class, 'logout'])->middleware(['auth:api',]);
 });
