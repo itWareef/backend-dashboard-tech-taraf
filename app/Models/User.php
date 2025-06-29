@@ -30,7 +30,7 @@ class User extends Authenticatable implements FileUpload
     ];
     public function documentFullPathStore(): string
     {
-        return 'customers/';
+        return 'users/';
     }
 
     public function requestKeysForFile(): array

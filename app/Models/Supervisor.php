@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Core\Interfaces\FileUpload;
 use App\Models\Project\Unit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class Supervisor extends Authenticatable
+class Supervisor extends Authenticatable implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
     use HasFactory , Notifiable,HasApiTokens ,HandleToArrayTrait;
@@ -52,5 +53,16 @@ class Supervisor extends Authenticatable
     public function units()
     {
         return $this->hasMany(Unit::class,'owner_id');
+    }
+    public function documentFullPathStore(): string
+    {
+        return 'supervisors/';
+    }
+
+    public function requestKeysForFile(): array
+    {
+        return [
+            'picture'
+        ];
     }
 }
