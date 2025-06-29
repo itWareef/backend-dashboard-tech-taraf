@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\CustomerController;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequests\CustomerLoginRequest;
+use App\Http\Requests\CustomerRequests\CustomerSupportStoringRequest;
 use App\Http\Requests\VendorRequests\VendorAdminLoginRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Models\AuthenticationModule\Customer\CustomerAddress;
@@ -11,6 +12,7 @@ use App\Models\Customer\Customer;
 use App\Models\Project\Contract;
 use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
+use App\Models\Support;
 use App\Services\AddNewAddressToCustomer;
 use App\Services\CustomerServices\CustomerAuthService;
 use App\Services\CustomerServices\CustomerDeletingService;
@@ -116,6 +118,15 @@ class CustomerController extends Controller
                 ->where('requester_id', $requesterId)
                 ->count(),
         ];
+    }
+    public function support(CustomerSupportStoringRequest $request)
+    {
+        $user = auth('customer')->user();
+        Support::create([
+            'requester_id' => $user->id,
+            'note' => $request->note
+        ]);
+        return Response::success([],['تم ارسال طلبك لخدمة العملاء بنجاح']);
     }
 
     public function updateProfile(Request $request)
