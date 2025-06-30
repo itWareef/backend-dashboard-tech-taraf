@@ -4,6 +4,8 @@ namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
 use App\Models\Customer\Customer;
+use App\Models\MaintenanceRequestAttachment;
+use App\Models\PlantingRequestAttachment;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
@@ -63,5 +65,9 @@ class PlantingRequest extends Model implements FileUpload
     public function superVisorVisits(): MorphMany
     {
         return $this->morphMany(SuperVisorVisit::class, 'request');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(PlantingRequestAttachment::class ,'planting_id');
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('requester_id')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('project_id')->constrained('projects')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('unit_id')->constrained('units')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('date');
             $table->string('picture')->nullable();
             $table->string('time')->nullable();

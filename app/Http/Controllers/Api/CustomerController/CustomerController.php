@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CustomerRequests\CustomerLoginRequest;
 use App\Http\Requests\CustomerRequests\CustomerSupportStoringRequest;
+use App\Http\Requests\CustomerRequests\CustomerUpdatePasswordRequest;
 use App\Http\Requests\VendorRequests\VendorAdminLoginRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Models\AuthenticationModule\Customer\CustomerAddress;
@@ -22,6 +23,7 @@ use App\Services\CustomerServices\CustomerUpdatingService;
 use App\Services\CustomerServices\RegisterCustomer;
 use App\Services\VendorServices\VendorAuthService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -144,5 +146,15 @@ class CustomerController extends Controller
         ->get()
         ->toArray();
         return Response::success($data);
+    }
+    public function updatePassword(CustomerUpdatePasswordRequest $request)
+    {
+        $user = auth()->user();
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return Response::success([],['تم تغير الباسورد بنجاح']);
     }
 }

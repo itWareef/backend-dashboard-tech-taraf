@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
 use App\Models\Customer\Customer;
+use App\Models\MaintenanceRequestAttachment;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
@@ -21,6 +22,7 @@ class MaintenanceRequest extends Model implements FileUpload
         'requester_id',
         'unit_id',
         'project_id',
+        'category_id',
         'date',
         'picture',
         'phone',
@@ -58,7 +60,11 @@ class MaintenanceRequest extends Model implements FileUpload
     }
     public function supervisors()
     {
-        return $this->hasMany(PlantingSuperVisor::class ,'planting_id');
+        return $this->hasMany(MaintenanceSuperVisor::class ,'maintenance_id');
+    }
+    public function attachments()
+    {
+        return $this->hasMany(MaintenanceRequestAttachment::class ,'maintenance_id');
     }
     public function superVisorVisits(): MorphMany
     {

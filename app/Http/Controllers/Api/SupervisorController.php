@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Core\Classes\HandleFiles\StoragePictures;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupervisorRequests\AcceptOrRejectRequestRequest;
 use App\Http\Requests\SupervisorRequests\AnotherVisitRequestRequest;
@@ -180,7 +181,7 @@ class SupervisorController extends Controller
             ? SuperVisorRequests::ACCEPTED
             : SuperVisorRequests::REJECTED;
 
-        DB::transaction(function () use ($object, $requestType, $status , $supervisor) {
+        DB::transaction(function () use ($object, $requestType, $status , $supervisor , $request) {
             $object->supervisors()
                 ->where('supervisor_id', $supervisor->id)
                 ->update(['status' => $status]);
@@ -188,6 +189,24 @@ class SupervisorController extends Controller
             $object->superVisorVisits()->create([
                 'supervisor_id' => $supervisor->id
             ]);
+           if(!empty($request['attachments'])){
+               foreach ($request['attachments'] as $attachment) {
+                   if (!$attachment instanceof \Illuminate\Http\UploadedFile) {
+                       continue;
+                   }
+
+                   $storedName = StoragePictures::storeFile($attachment, $object);
+
+                   if ($storedName !== false) {
+                       $object->attachments()->create([
+                           'path' => $storedName,
+                           'original_name' => $attachment->getClientOriginalName(), // إذا كنت تخزن الاسم الأصلي
+                       ]);
+                   }
+               }
+           }
+
+
         });
 
         return Response::success([], ['تم استقبال ردك على الطلب']);
