@@ -26,8 +26,9 @@ class AdminController extends Controller
         $data = $customer->toArray();
         return Response::success($data);
     }
-    public function update(User $user)
+    public function update()
     {
+        $user = request()->user('api');
         return (new AdminUpdatingService($user))->update() ;
     }
     public function logout(Request $request)
