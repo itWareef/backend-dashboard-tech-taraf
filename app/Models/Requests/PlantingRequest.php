@@ -4,6 +4,7 @@ namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
 use App\Models\Customer\Customer;
+use App\Models\HandleToArrayTrait;
 use App\Models\MaintenanceRequestAttachment;
 use App\Models\PlantingRequestAttachment;
 use App\Models\Project\Project;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class PlantingRequest extends Model implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\MaintenanceRequestFactory> */
-    use HasFactory;
+    use HasFactory ,HandleToArrayTrait;
     protected $fillable=[
         'requester_id',
         'project_id',
