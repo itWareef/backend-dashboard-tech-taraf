@@ -34,8 +34,8 @@ Route::prefix('customer')->group(function () {
     Route::get('planting-request/{status}', [\App\Http\Controllers\PlantingRequestController::class ,'list'])->middleware(['auth:customer',]);
     Route::get('units', [\App\Http\Controllers\UnitController::class ,'listForCustomer'])->middleware(['auth:customer',]);
     Route::get('projects', [\App\Http\Controllers\UnitController::class ,'listProjectsForCustomer'])->middleware(['auth:customer',]);
-    Route::get('planting-categories', [\App\Http\Controllers\CategoryController::class ,'listPlanting'])->middleware(['auth:customer',]);
-    Route::get('maintenance-categories', [\App\Http\Controllers\CategoryController::class ,'listMaintenance'])->middleware(['auth:customer',]);
+    Route::get('planting-categories', [\App\Http\Controllers\CategoryController::class ,'listPlanting']);
+    Route::get('maintenance-categories', [\App\Http\Controllers\CategoryController::class ,'listMaintenance']);
     Route::post('support',[CustomerController::class, 'support'])->middleware(['auth:customer',]);
 });
 
