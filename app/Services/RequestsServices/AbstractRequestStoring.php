@@ -13,16 +13,16 @@ abstract class AbstractRequestStoring extends  AbstractClassHandleStoreData
 
     protected function doBeforeValidation(): void
     {
-        $data = app($this->getModelClass())
-            ->where('requester_id', auth('customer')->id())
-            ->whereNull('rating')
-            ->exists();
-        if ($data) {
-            throw new HttpResponseException(response()->json([
-                'status' => 'error',
-                'errors' => ["يجب عليك تقييم الطلب السابق قبل تقديم طلب جديد."]
-            ], 422));
-        }
+//        $data = app($this->getModelClass())
+//            ->where('requester_id', auth('customer')->id())
+//            ->whereNull('rating')
+//            ->exists();
+//        if ($data) {
+//            throw new HttpResponseException(response()->json([
+//                'status' => 'error',
+//                'errors' => ["يجب عليك تقييم الطلب السابق قبل تقديم طلب جديد."]
+//            ], 422));
+//        }
     }
     protected function getDataHandle(): array
     {
