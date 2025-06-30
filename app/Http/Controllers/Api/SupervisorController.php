@@ -195,7 +195,7 @@ class SupervisorController extends Controller
                        continue;
                    }
 
-                   $storedName = StoragePictures::storeFile($attachment, $object);
+                   $storedName = StoragePictures::storeFile($attachment['path'], $object);
 
                    if ($storedName !== false) {
                        $object->attachments()->create([
