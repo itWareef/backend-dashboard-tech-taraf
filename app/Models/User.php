@@ -12,7 +12,7 @@ use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HasApiTokens,HandleToArrayTrait;
+    use HasFactory, Notifiable,HasApiTokens,HandleToArrayTrait,HandleToArrayTrait;
 
     /**
      * The attributes that are mass assignable.

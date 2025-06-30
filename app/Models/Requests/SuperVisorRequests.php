@@ -3,12 +3,14 @@
 namespace App\Models\Requests;
 
 use App\Core\Interfaces\FileUpload;
+use App\Models\HandleToArrayTrait;
 use App\Models\Supervisor;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class SuperVisorRequests extends Model implements FileUpload
 {
     protected $fillable = [];
+    use HandleToArrayTrait;
 
     public function __construct(array $attributes = [])
     {

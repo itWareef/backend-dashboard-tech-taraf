@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MaintenanceRequestAttachment extends Model implements FileUpload
 {
+    use HandleToArrayTrait;
     protected $table='maintenance_attachments';
     protected $fillable=[
         'path',

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PlantingRequestAttachment extends Model implements FileUpload
 {
+    use HandleToArrayTrait;
+
     protected $fillable=[
     'path',
     'planting_id'
