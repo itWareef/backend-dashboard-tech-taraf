@@ -6,6 +6,7 @@ use App\Core\Classes\HandleFiles\StoragePictures;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SupervisorRequests\AcceptOrRejectRequestRequest;
 use App\Http\Requests\SupervisorRequests\AnotherVisitRequestRequest;
+use App\Http\Requests\SupervisorRequests\FinishRequestRequest;
 use App\Http\Requests\SupervisorRequests\SupervisorLoginRequest;
 
 use App\Http\Requests\SupervisorRequests\UpdatingRequestRequest;
@@ -212,7 +213,7 @@ class SupervisorController extends Controller
         return Response::success([], ['تم استقبال ردك على الطلب']);
     }
 
-    public function finishedRequest(UpdatingRequestRequest $request, int $id)
+    public function finishedRequest(FinishRequestRequest $request, int $id)
     {
         $supervisor = auth('supervisor')->user();
         $requestType = $this->getRequestModel();
