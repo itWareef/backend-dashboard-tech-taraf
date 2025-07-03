@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\CustomerController\CustomerController;
+use App\Http\Controllers\Api\GpsLocationController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\SupervisorController;
 use App\Http\Controllers\Auth\PasswordOtpController;
@@ -55,6 +56,7 @@ Route::prefix('supervisors')->group(function () {
         Route::post('{id}/accept-or-reject', [SupervisorController::class, 'acceptOrReject']);
         Route::post('{id}/finish', [SupervisorController::class, 'finishedRequest']);
         Route::post('{id}/another-visit', [SupervisorController::class, 'anotherVisit']);
+        Route::post('/gps/update', [GpsLocationController::class, 'update']);
     });
 });
 Route::prefix('admins')->group(function () {
@@ -62,4 +64,7 @@ Route::prefix('admins')->group(function () {
     Route::post('logout', [AdminController::class, 'logout'])->middleware(['auth:api',]);
     Route::post('update-profile', [AdminController::class, 'update'])->middleware(['auth:api',]);
     Route::get('me', [AdminController::class, 'me'])->middleware(['auth:api',]);
+    Route::get('/gps/all', [GpsLocationController::class, 'index'])->middleware(['auth:api',]);
+
 });
+
