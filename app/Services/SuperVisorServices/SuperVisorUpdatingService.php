@@ -21,7 +21,14 @@ class SuperVisorUpdatingService extends AbstractClassHandleUpdate
     protected function getDataHandle(): array
     {
         $data = parent::getDataHandle();
-        $data['name'] = $data['first_name'].' '.$data['last_name'];
+
+        if (!empty($data['first_name']) && !empty($data['last_name'])) {
+            $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
+        } else {
+            $data['name'] = $data['first_name'] ?? $data['last_name'] ?? '';
+        }
+
         return $data;
     }
+
 }
