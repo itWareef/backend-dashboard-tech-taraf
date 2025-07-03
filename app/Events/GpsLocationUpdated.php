@@ -4,10 +4,10 @@ namespace App\Events;
 
 use App\Models\GpsLocation;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Queue\SerializesModels;
 
-class GpsLocationUpdated implements ShouldBroadcast
+class GpsLocationUpdated implements ShouldBroadcastNow
 {
     use SerializesModels;
 
@@ -23,6 +23,14 @@ class GpsLocationUpdated implements ShouldBroadcast
         return new Channel('gps-tracking');
     }
 
+    public function broadcastWith()
+    {
+        return [
+            'data' => [
+                $this->location
+            ]
+        ];
+    }
     public function broadcastAs()
     {
         return 'location.updated';
