@@ -26,7 +26,7 @@ class GpsLocationController extends Controller
                 'recorded_at' => now(),
             ]
         );
-
+        $location->load('supervisor');
         broadcast(new GpsLocationUpdated($location))->toOthers();
 
         return Response::success([],['done']);
