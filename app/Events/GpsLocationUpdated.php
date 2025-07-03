@@ -4,10 +4,10 @@ namespace App\Events;
 
 use App\Models\GpsLocation;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Queue\SerializesModels;
 
-class GpsLocationUpdated implements ShouldBroadcast
+class GpsLocationUpdated implements ShouldBroadcastNow
 {
     use SerializesModels;
 
