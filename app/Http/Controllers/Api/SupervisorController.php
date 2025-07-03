@@ -36,7 +36,7 @@ class SupervisorController extends Controller
 
     public function update(Supervisor $supervisor)
     {
-        return (new SupervisorUpdatingService($supervisor))->update() ;
+        return (new SuperVisorUpdatingService($supervisor))->update() ;
     }
     public function index(Request $request)
     {
