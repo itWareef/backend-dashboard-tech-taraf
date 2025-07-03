@@ -18,8 +18,8 @@ use App\Models\Supervisor;
 use App\Services\SuperVisorServices\SupervisorAuthService;
 
 use App\Services\SuperVisorServices\SuperVisorUpdatingRequestService;
-use App\Services\SupervisorServices\SupervisorUpdatingService;
 use App\Services\SupervisorServices\RegisterSupervisor;
+use App\Services\SuperVisorServices\SuperVisorUpdatingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
