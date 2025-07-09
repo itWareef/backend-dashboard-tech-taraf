@@ -27,8 +27,8 @@ class RegisterCustomerRequest extends FormRequest
         return [
             'last_name' => ['required', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email',Rule::unique('customers','email')],
-            'phone' => ['required', 'string', 'unique:customers,phone'],
+            'email' => ['required', 'email',],
+            'phone' => ['required', 'string',],
             'password' => ['required', 'confirmed','string', 'min:8'],
         ];
     }
