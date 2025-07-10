@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\GpsLocationController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\SupervisorController;
 use App\Http\Controllers\Auth\PasswordOtpController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,7 @@ Route::prefix('customer')->group(function () {
     Route::get('planting-categories', [\App\Http\Controllers\CategoryController::class ,'listPlanting']);
     Route::get('maintenance-categories', [\App\Http\Controllers\CategoryController::class ,'listMaintenance']);
     Route::post('support',[CustomerController::class, 'support'])->middleware(['auth:customer',]);
+    Route::post('/chat/send', [ChatController::class, 'send']);
 });
 
 Route::prefix('supervisors')->group(function () {
