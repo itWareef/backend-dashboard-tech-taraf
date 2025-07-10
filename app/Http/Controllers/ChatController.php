@@ -24,7 +24,7 @@ class ChatController extends Controller
 
         ChatMessage::create([
             'user_id' => auth('customer')->id(),
-            'message' => $response,
+            'message' => $response['message'],
             'sender' => 'bot',
         ]);
 
