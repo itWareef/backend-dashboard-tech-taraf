@@ -89,6 +89,7 @@ class ChatBotService
         /** @var ChatResponseInterface $response */
         $response = new $responseClass();
             if ($response->matches($message, $lang)) {
+                dd($lang);
             return $response->reply($lang ??'');
             }
             if ($response instanceof \App\Services\ChatBot\Responses\FinalResponse) {
