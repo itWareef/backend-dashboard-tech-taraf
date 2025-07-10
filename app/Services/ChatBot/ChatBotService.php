@@ -88,7 +88,7 @@ class ChatBotService
         /** @var ChatResponseInterface $response */
         $response = new $responseClass();
             if ($response->matches($message, $lang)) {
-            return $response->reply($lang);
+            return $response->reply($lang ??'');
             }
             if ($response instanceof \App\Services\ChatBot\Responses\FinalResponse) {
                 Cache::put("chatbot_state_$userId", 'awaiting_user_info', now()->addHours(6));
