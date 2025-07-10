@@ -99,10 +99,8 @@ class ChatBotService
             }
         }
 
-        return [
-            'message' => $lang === 'en'
-                ? "Sorry, I didn't understand. Please try again."
-                : "عذرًا، لم أفهم رسالتك. حاول مرة أخرى."
-        ];
+        return ['message' =>$lang === 'en'
+        ? "Dear customer, thank you for contacting us. We will respond to you as soon as possible."
+        : "عميلنا العزيز نشكرك علي تواصلك معنا وسيتم الرد عليك في أقرب وقت ممكن"];
     }
 }
