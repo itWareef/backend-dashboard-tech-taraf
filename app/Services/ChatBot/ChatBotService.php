@@ -37,7 +37,7 @@ class ChatBotService
         $lang = 'en';
             Cache::put("chatbot_lang_" . $userId, 'en', now()->addHours(6));
         }
-        dd($state);
+
         if ($state === 'awaiting_user_info') {
             $pattern = '/(.+?)\s*-\s*(\d{10,})\s*-\s*([\w.%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})/u';
             if (preg_match($pattern, $message, $matches)) {
