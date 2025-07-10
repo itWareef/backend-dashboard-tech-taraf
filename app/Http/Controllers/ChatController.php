@@ -20,7 +20,7 @@ class ChatController extends Controller
         ]);
 
         // معالجة الرد حسب الرسالة
-        $response = ChatBotService::generateResponse($message);
+        $response = ChatBotService::generateResponse($message , auth('customer')->id());
 
         ChatMessage::create([
             'user_id' => auth('customer')->id(),
