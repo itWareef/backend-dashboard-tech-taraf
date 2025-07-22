@@ -9,20 +9,20 @@ class StoreUnitRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'project_name'   => 'required|string|max:255',
+            'developer_name' => 'required|string|max:255',
+            'unit_no'        => 'required|string|max:100',
+            'space'          => 'required|string|max:100',
+            'deed_number'    => 'required|string|max:100',
+            'date'           => 'required|date',
         ];
     }
 }

@@ -28,218 +28,275 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class SupervisorController extends Controller
 {
-
+    /**
+     * Register a new supervisor.
+     */
     public function register()
     {
-        return (new RegisterSupervisor())->storeNewRecord() ;
+        return (new RegisterSupervisor())->storeNewRecord();
     }
 
+    /**
+     * Update supervisor data.
+     */
     public function update(Supervisor $supervisor)
     {
-        return (new SuperVisorUpdatingService($supervisor))->update() ;
+        return (new SuperVisorUpdatingService($supervisor))->update();
     }
+
+    /**
+     * List supervisors with filters and statistics.
+     */
     public function index(Request $request)
     {
-        $data = QueryBuilder::for(Supervisor::class)->allowedFilters([
-            'first_name',
-            'last_name',
-            'name',
-            'username',
-            'email',
-            'phone',
-            'date_of_birth',
-            'expire_identify',
-        ])->datesFiltering()->paginate(7);
-        $statistics = (new SupervisorStatistics())->getStatistics();
+        $data = QueryBuilder::for(Supervisor::class)
+            ->allowedFilters(['first_name', 'last_name', 'name', 'username', 'email', 'phone', 'date_of_birth', 'expire_identify'])
+            ->datesFiltering()
+            ->paginate(7);
+
+        $statistics = (new \App\Services\SuperVisorServices\SupervisorStatistics())->getStatistics();
         $total = Supervisor::count();
-        return \response()->json(['list' =>$data ,'statistics' =>$statistics ,'total' =>$total]);
+
+        return response()->json([
+            'list' => $data,
+            'statistics' => $statistics,
+            'total' => $total,
+        ]);
     }
 
-    public function show(Request $request ,Supervisor $supervisor)
+    /**
+     * Show supervisor details.
+     */
+    public function show(Request $request, Supervisor $supervisor)
     {
-        $data = $supervisor->toArray();
-        return Response::success($data);
+        return Response::success($supervisor->toArray());
     }
-    public function list(Request $request)
+
+    /**
+     * Get lightweight list of supervisors (id, name, picture).
+     */
+    public function list()
     {
-        $data = QueryBuilder::for(Supervisor::class)->allowedFilters([
-            'name',
-        ])->get(['id' ,'name','picture'])->toArray();
+        $data = Supervisor::select('id', 'name', 'picture')->get()->toArray();
         return Response::success($data);
     }
 
+    /**
+     * Supervisor login.
+     */
     public function login(SupervisorLoginRequest $request)
     {
         return (new SupervisorAuthService())->login($request);
     }
+
+    /**
+     * Verify supervisor OTP.
+     */
     public function verifyOtp(VerifyOtpRequest $request)
     {
         return (new SupervisorAuthService())->verifyOtp($request);
     }
 
+    /**
+     * Supervisor logout.
+     */
     public function logout(Request $request)
     {
         $request->user('supervisor')->token()->revoke();
-        return Response::success([], ['Successfully logged out'] , 200);
+        return Response::success([], ['Successfully logged out'], 200);
     }
+
+    /**
+     * Get current supervisor info and stats.
+     */
     public function me(Request $request)
     {
         $supervisor = $request->user('supervisor');
+        $model = $this->getRequestModel();
+
         $data = $supervisor->toArray();
-        $supervisorId = $supervisor->id;
-
-        $requestType = $supervisor->type === 'planting'
-            ? PlantingRequest::class
-            : MaintenanceRequest::class;
-
         $data['counting'] = [
-            'requests' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::PENDING, $requestType::IN_PROGRESS),
-            'in_progress' => $this->getSupervisorRequestCount($requestType, $supervisorId, SuperVisorRequests::ACCEPTED, $requestType::IN_PROGRESS),
-            'finished' => QueryBuilder::for($requestType)
-                ->where('status', $requestType::FINISHED)
-                ->whereHas('supervisors', function ($query) use ($supervisorId) {
-                    $query->where('status', SuperVisorRequests::ACCEPTED)
-                        ->where('supervisor_id', $supervisorId);
-                })
-                ->count(),
+            'requests' => $this->countRequests($model, $supervisor->id, SuperVisorRequests::PENDING, $model::IN_PROGRESS),
+            'in_progress' => $this->countRequests($model, $supervisor->id, SuperVisorRequests::ACCEPTED, $model::IN_PROGRESS),
+            'finished' => $this->countFinishedRequests($model, $supervisor->id),
         ];
+        $data['rating'] = $this->averageRating($model, $supervisor->id);
 
-        $data['rating'] = QueryBuilder::for($requestType)
-            ->where('status', $requestType::FINISHED)
-            ->whereHas('supervisors', function ($query) use ($supervisorId) {
-                $query->where('status', SuperVisorRequests::ACCEPTED)
-                    ->where('supervisor_id', $supervisorId);
-            })
-            ->avg('rating')??0;
         return Response::success($data);
     }
 
-    private function getSupervisorRequestCount(string $modelClass, int $supervisorId, string $status , string$status2): int
-    {
-        return QueryBuilder::for($modelClass)
-            ->where('status', $status2)
-            ->whereHas('supervisors', function ($query) use ($status, $supervisorId) {
-                $query->where('status', $status)
-                    ->where('supervisor_id', $supervisorId);
-            })
-            ->count();
-    }
-
+    /**
+     * Update supervisor profile.
+     */
     public function updateProfile(Request $request)
     {
         $supervisor = $request->user('supervisor');
-        return (new SupervisorUpdatingService($supervisor))->update() ;
+        return (new SupervisorUpdatingService($supervisor))->update();
     }
 
+    /**
+     * List pending requests for supervisor.
+     */
     public function requests()
     {
-        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
-        $data = QueryBuilder::for($requestType)
-            ->allowedFilters([])
-            ->whereHas('supervisors', function ($query) {
-                $query->where('status',SuperVisorRequests::PENDING)->where('supervisor_id',auth('supervisor')->id());
-            })
-            ->with(['unit','project','requester'])->get();
-        return Response::success(['data' =>$data]);
+        $model = $this->getRequestModel();
+        $data = $model::whereHas('supervisors', function ($q) {
+            $q->where('status', SuperVisorRequests::PENDING)
+                ->where('supervisor_id', auth('supervisor')->id());
+        })->with(['unit', 'project', 'requester'])->get();
+
+        return Response::success(['data' => $data]);
     }
+
+    /**
+     * List in-progress requests.
+     */
     public function requestsInProgress()
     {
-        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
-        $data = QueryBuilder::for($requestType)
-            ->allowedFilters([])
-            ->where('status' , $requestType::IN_PROGRESS)
-            ->whereHas('supervisors', function ($query) {
-                $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
-            })
-            ->with(['unit','project','requester'])->get();
-        return Response::success(['data' =>$data]);
+        $model = $this->getRequestModel();
+        $data = $model::where('status', $model::IN_PROGRESS)
+            ->whereHas('supervisors', function ($q) {
+                $q->where('status', SuperVisorRequests::ACCEPTED)
+                    ->where('supervisor_id', auth('supervisor')->id());
+            })->with(['unit', 'project', 'requester'])->get();
+
+        return Response::success(['data' => $data]);
     }
+
+    /**
+     * List finished requests.
+     */
     public function requestsFinished()
     {
-        $requestType = auth('supervisor')->user()->type == 'planting' ? PlantingRequest::class :MaintenanceRequest::class;
-        $data = QueryBuilder::for($requestType)
-            ->allowedFilters([])
-            ->where('status' , $requestType::FINISHED)->whereHas('supervisors', function ($query) {
-                $query->where('status',SuperVisorRequests::ACCEPTED)->where('supervisor_id',auth('supervisor')->id());
-            })
-            ->with(['unit','project','requester'])->get();
-        return Response::success(['data' =>$data]);
+        $model = $this->getRequestModel();
+        $data = $model::where('status', $model::FINISHED)
+            ->whereHas('supervisors', function ($q) {
+                $q->where('status', SuperVisorRequests::ACCEPTED)
+                    ->where('supervisor_id', auth('supervisor')->id());
+            })->with(['unit', 'project', 'requester'])->get();
+
+        return Response::success(['data' => $data]);
     }
 
-    protected function getRequestModel()
-    {
-        $supervisor = auth('supervisor')->user();
-        return $supervisor->type === 'planting' ? PlantingRequest::class : MaintenanceRequest::class;
-    }
-
+    /**
+     * Accept or reject a request.
+     */
     public function acceptOrReject(AcceptOrRejectRequestRequest $request, int $id)
     {
-        $supervisor = auth('supervisor')->user();
-        $requestType = $this->getRequestModel();
-        $object = $requestType::findOrFail($id);
-
+        $model = $this->getRequestModel();
+        $object = $model::findOrFail($id);
+        $supervisorId = auth('supervisor')->id();
         $status = $request->status === SuperVisorRequests::ACCEPTED
             ? SuperVisorRequests::ACCEPTED
             : SuperVisorRequests::REJECTED;
 
-        DB::transaction(function () use ($object, $requestType, $status , $supervisor , $request) {
-            $object->supervisors()
-                ->where('supervisor_id', $supervisor->id)
-                ->update(['status' => $status]);
+        DB::transaction(function () use ($object, $supervisorId, $status, $request) {
+            $object->supervisors()->where('supervisor_id', $supervisorId)->update(['status' => $status]);
+            $object->superVisorVisits()->create(['supervisor_id' => $supervisorId]);
 
-            $object->superVisorVisits()->create([
-                'supervisor_id' => $supervisor->id
-            ]);
-           if(!empty($request['attachments'])){
-               foreach ($request['attachments'] as $attachment) {
-                   if (!$attachment instanceof \Illuminate\Http\UploadedFile) {
-                       continue;
-                   }
-
-                   $storedName = StoragePictures::storeFile($attachment['path'], $object);
-
-                   if ($storedName !== false) {
-                       $object->attachments()->create([
-                           'path' => $storedName,
-                           'original_name' => $attachment->getClientOriginalName(), // إذا كنت تخزن الاسم الأصلي
-                       ]);
-                   }
-               }
-           }
-
-
+            foreach ($request->attachments ?? [] as $attachment) {
+                if ($attachment instanceof \Illuminate\Http\UploadedFile) {
+                    $stored = StoragePictures::storeFile($attachment->path, $object);
+                    if ($stored) {
+                        $object->attachments()->create([
+                            'path' => $stored,
+                            'original_name' => $attachment->getClientOriginalName()
+                        ]);
+                    }
+                }
+            }
         });
 
         return Response::success([], ['تم استقبال ردك على الطلب']);
     }
 
+    /**
+     * Finish a request.
+     */
     public function finishedRequest(FinishRequestRequest $request, int $id)
     {
-        $supervisor = auth('supervisor')->user();
-        $requestType = $this->getRequestModel();
-        $object = $requestType::findOrFail($id);
+        $model = $this->getRequestModel();
+        $object = $model::findOrFail($id);
 
         if ($request->otp !== $object->otp) {
             return Response::error('رمز التحقق لا يطابق');
         }
 
-        $object->status = $requestType::WAITING_RATING;
-        $object->save();
+        $object->update(['status' => $model::WAITING_RATING]);
+        $object->load('supervisors');
 
-        $object->load(['supervisors']);
         return (new SuperVisorUpdatingRequestService($object->supervisors))->update();
     }
 
+    /**
+     * Request another visit.
+     */
     public function anotherVisit(AnotherVisitRequestRequest $request, int $id)
     {
-        $supervisor = auth('supervisor')->user();
-        $requestType = $this->getRequestModel();
-        $object = $requestType::findOrFail($id);
+        $model = $this->getRequestModel();
+        $object = $model::findOrFail($id);
 
-        $object->superVisorVisits()
-            ->where('supervisor_id', $supervisor->id)
-            ->update(['reason' => $request->reason]);
+        DB::beginTransaction();
 
-        return Response::success([], ['تم ارسال طلب زيارة بنجاح']);
+        try {
+            $object->superVisorVisits()->create([
+                'supervisor_id' => auth('supervisor')->id(),
+                'reason' => $request->reason,
+                'notes' => $request->notes,
+            ]);
+
+            $object->increment('visits_count');
+
+            DB::commit();
+
+            return Response::success([], ['تم ارسال طلب زيارة بنجاح']);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return Response::error(['حدث خطأ أثناء إرسال طلب الزيارة.'], $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Get current request model based on supervisor type.
+     */
+    protected function getRequestModel()
+    {
+        return auth('supervisor')->user()->type === 'planting' ? PlantingRequest::class : MaintenanceRequest::class;
+    }
+
+    /**
+     * Count supervisor requests.
+     */
+    protected function countRequests($model, $supervisorId, $status, $progressStatus)
+    {
+        return $model::where('status', $progressStatus)
+            ->whereHas('supervisors', function ($q) use ($status, $supervisorId) {
+                $q->where('status', $status)->where('supervisor_id', $supervisorId);
+            })->count();
+    }
+
+    /**
+     * Count finished requests for supervisor.
+     */
+    protected function countFinishedRequests($model, $supervisorId)
+    {
+        return $model::where('status', $model::FINISHED)
+            ->whereHas('supervisors', function ($q) use ($supervisorId) {
+                $q->where('status', SuperVisorRequests::ACCEPTED)
+                    ->where('supervisor_id', $supervisorId);
+            })->count();
+    }
+
+    /**
+     * Calculate average rating.
+     */
+    protected function averageRating($model, $supervisorId)
+    {
+        return $model::where('status', $model::FINISHED)
+            ->whereHas('supervisors', function ($q) use ($supervisorId) {
+                $q->where('status', SuperVisorRequests::ACCEPTED)
+                    ->where('supervisor_id', $supervisorId);
+            })->avg('rating') ?? 0;
     }
 }

@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('super_visor_visits', function (Blueprint $table) {
+        Schema::create('features', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supervisor_id')->nullable()->constrained('supervisors')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->morphs('request');
-            $table->text('reason')->nullable();
-            $table->text('notes')->nullable();
+            $table->string('name');
+            $table->string('picture');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('super_visor_visits');
+        Schema::dropIfExists('features');
     }
 };

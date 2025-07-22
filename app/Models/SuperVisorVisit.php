@@ -11,6 +11,7 @@ class SuperVisorVisit extends Model
         'supervisor_id',
         'request_type',
         'request_id',
+        'notes',
         'reason'
     ];
 
