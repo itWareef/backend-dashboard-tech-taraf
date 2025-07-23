@@ -14,7 +14,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class AdvertisingPostController extends Controller
 {
     public function index(){
-        $data = QueryBuilder::for(AdvertisingPost::class)->with(['features','section'])->paginate(20);
+        $data = QueryBuilder::for(AdvertisingPost::class)->paginate(20);
 
         return response()->json([
             'data' => $data
