@@ -13,7 +13,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class BrandController extends Controller
 {
     public function index(){
-        $data = QueryBuilder::for(Brand::class)->with(['features','section'])->paginate(20);
+        $data = QueryBuilder::for(Brand::class)->with(['features','section','pictures'])->paginate(20);
 
         return response()->json([
             'data' => $data
