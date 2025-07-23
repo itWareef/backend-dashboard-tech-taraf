@@ -3,11 +3,12 @@
 namespace App\Models\Store;
 
 use App\Core\Interfaces\FileUpload;
+use App\Core\Interfaces\HasManyRelations;
 use App\Core\Interfaces\ManyToManyRelations;
 use App\Models\HandleToArrayTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Brand extends Model implements FileUpload ,ManyToManyRelations
+class Brand extends Model implements FileUpload ,ManyToManyRelations , HasManyRelations
 {
     use HandleToArrayTrait;
 
@@ -42,6 +43,17 @@ class Brand extends Model implements FileUpload ,ManyToManyRelations
     {
         return [
             'features'
+        ];
+    }
+
+    public function pictures()
+    {
+        return $this->hasMany(BrandPicture::class,'brand_id');
+    }
+    public function getHasManyRelations(): array
+    {
+        return [
+            'pictures'
         ];
     }
 }

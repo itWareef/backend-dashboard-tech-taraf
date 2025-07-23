@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CustomerController\CustomerController;
 use App\Http\Controllers\Api\DeveloperController;
 use App\Http\Controllers\Api\GpsLocationController;
 use App\Http\Controllers\Api\OtpController;
+use App\Http\Controllers\Api\Store\AdvertisingPostController;
 use App\Http\Controllers\Api\Store\BrandController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CouponController;
@@ -88,6 +89,7 @@ Route::prefix('customer')->group(function () {
     // Store
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('brands/list/{brand}', [BrandController::class, 'show']);
+    Route::get('advertising-post/list/', [AdvertisingPostController::class, 'list']);
 
     Route::prefix('cart')->middleware('auth:customer')->group(function () {
         Route::get('/', [CartController::class, 'index']);
@@ -189,7 +191,14 @@ Route::prefix('admins')->group(function () {
             Route::delete('{coupon}', [CouponController::class, 'destroy']);
             Route::patch('{coupon}/toggle-status', [CouponController::class, 'toggleStatus']);
         });
-
+        // Brands
+        Route::prefix('advertising-post')->group(function () {
+            Route::get('/', [AdvertisingPostController::class, 'index']);
+            Route::get('list', [AdvertisingPostController::class, 'list']);
+            Route::post('/', [AdvertisingPostController::class, 'store']);
+            Route::post('{advertisingPost}', [AdvertisingPostController::class, 'update']);
+            Route::delete('{advertisingPost}', [AdvertisingPostController::class, 'destroy']);
+        });
         // Orders
         Route::get('orders', [OrderController::class, 'index']);
     });

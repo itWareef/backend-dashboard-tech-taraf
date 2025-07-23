@@ -30,7 +30,7 @@ class BrandController extends Controller
         return (new BrandUpdatingService($brand))->update();
     }
     public function show( Brand $brand){
-        return Response::success($brand->load(['features','section'])->toArray());
+        return Response::success($brand->load(['features','section','pictures'])->toArray());
     }
     public function list()
     {
