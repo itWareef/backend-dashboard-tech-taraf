@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('unit_type');
             $table->string('space');
             $table->string('latitude')->nullable(); // الموقع الجغرافي
-            $table->string('longitude')->nullable(); // الموقع الجغرافي            $table->enum('visit_type',GardenRequest::VISIT_TYPES);
+            $table->string('longitude')->nullable();
+           $table->enum('visit_type',GardenRequest::VISIT_TYPES);
             $table->enum('type',GardenRequest::TYPES);
             $table->string('notes')->nullable();
             $table->string('action')->nullable();
