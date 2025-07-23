@@ -61,6 +61,7 @@ class OrderController extends Controller
                 'total_price'    => $total - $discountAmount,
                 'coupon_id'      => $couponId,
                 'discount_amount'=> $discountAmount,
+                'payment_method'=> $request->input('method'),
                 'order_status'   => 'pending',
                 'payment_status' => 'unpaid',
                 'customer_name'  => $request->customer_name,

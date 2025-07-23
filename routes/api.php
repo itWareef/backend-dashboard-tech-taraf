@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Store\SectionController;
 use App\Http\Controllers\Api\SupervisorController;
 use App\Http\Controllers\Auth\PasswordOtpController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -93,6 +94,8 @@ Route::prefix('customer')->group(function () {
         Route::delete('item/{cartItem}', [CartController::class, 'deleteIem']);
         Route::delete('/{cart}', [CartController::class, 'destroy']);
     });
+
+    Route::post('/payment/', [PaymentController::class, 'paymentProcess'])->middleware(['auth:customer']);
 
     Route::post('coupons/validate', [CouponController::class, 'validateCoupon']);
     Route::post('orders', [OrderController::class, 'store']);
