@@ -10,6 +10,7 @@ use App\Models\AdminPanel\Packages\Package;
 use App\Models\AdminPanel\Plan\Plan;
 use App\Models\AdminPanel\Subscription\Subscription;
 use App\Models\AuthenticationModule\User\User;
+use App\Models\Store\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -32,9 +33,9 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
     public function sendPayment(Request $request)
     {
         $data = $request->all();
-        $package =Plan::find($data['plan_id']);
-        $data['amount'] = $package->price * 100;
-        $data['description'] = "Subscribe Plan";
+        $order =Order::find($data['order_id']);
+        $data['amount'] = $order->total_price * 100;
+        $data['description'] = "Pay Order #" . $data['id'];
         $data['currency'] = "SAR";
         $data['source'] =[
         'type' => $request->card,
@@ -45,32 +46,13 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
         'year' => $request->card_expiry_year,
         ];
          $data['success_url'] =$request->getSchemeAndHttpHost().'/api/payment/callback';
-         $data['callback_url'] ='https://pt-express.net/';
+         $data['callback_url'] ='http://api.taraf.dashboard-tech.com/';
         $response = $this->buildRequest("POST",'/v1/payments',$data);
         if ($response->getData(true)['status'] === 'success') {
-            $finalAmount =$package->price;
-            $durations = [
-                'days' => $package->duration_days ?? 0,
-                'months' => $package->duration_months ?? 0,
-                'years' => $package->duration_years ?? 0,
-            ];
-
-            $expireDate = now();
-
-            foreach ($durations as $unit => $value) {
-                if ($value > 0) {
-                    $expireDate = $expireDate->{"add" . ucfirst($unit)}($value);
-                }
-            }
-            Transaction::create([
-                'sender_id' => auth('vendor')->id() ?? null,
-                'sender_type' => 'vendor',
-                'plan_id'=>$data['plan_id'],
-                'expire_date'=>$expireDate,
-                'amount'=> $finalAmount,
-            ]);
+            $order->payment_status = 'paid';
             return Response::success(['Transaction_url' => $response->getData(true)['data']['source']['transaction_url'] ], ["Redirect To This Link To Confirm Payment"]);
         }else{
+            $package->payment_status = 'rejected';
             return Response::error($response->getData(true)['errors']['errors']);
         }
     }
