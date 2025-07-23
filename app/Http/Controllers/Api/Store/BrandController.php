@@ -29,6 +29,9 @@ class BrandController extends Controller
     public function update( Brand $brand){
         return (new BrandUpdatingService($brand))->update();
     }
+    public function show( Brand $brand){
+        return Response::success($brand->load(['features','section'])->toArray());
+    }
     public function list()
     {
         $data = QueryBuilder::for(Brand::class)->get()->toArray();

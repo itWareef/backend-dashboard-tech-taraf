@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\ContractRequestController;
 use App\Http\Controllers\Api\CustomerController\CustomerController;
+use App\Http\Controllers\Api\DeveloperController;
 use App\Http\Controllers\Api\GpsLocationController;
 use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\Store\BrandController;
@@ -86,6 +87,7 @@ Route::prefix('customer')->group(function () {
 
     // Store
     Route::get('brands/list', [BrandController::class, 'list']);
+    Route::get('brands/list/{brand}', [BrandController::class, 'show']);
 
     Route::prefix('cart')->middleware('auth:customer')->group(function () {
         Route::get('/', [CartController::class, 'index']);
@@ -144,7 +146,12 @@ Route::prefix('admins')->group(function () {
         Route::get('me', [AdminController::class, 'me']);
         Route::get('/gps/all', [GpsLocationController::class, 'index']);
     });
-
+    Route::prefix('developers')->group(function () {
+        Route::get('/', [DeveloperController::class, 'index']);
+        Route::post('/', [DeveloperController::class, 'store']);
+        Route::post('{developer}', [DeveloperController::class, 'update']);
+        Route::delete('{developer}', [DeveloperController::class, 'destroy']);
+    });
     // Store Management
     Route::prefix('store')->group(function () {
         // Features
