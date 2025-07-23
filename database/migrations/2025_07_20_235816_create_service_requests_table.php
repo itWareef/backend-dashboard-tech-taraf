@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('service_requests', function (Blueprint $table) {
             $table->id();
+            $table->enum('type',['service','cleaning']);
             $table->foreignId('requester_id')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('project');
             $table->string('unit');
