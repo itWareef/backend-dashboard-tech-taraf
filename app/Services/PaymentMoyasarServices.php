@@ -52,7 +52,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
             $order->payment_status = 'paid';
             return Response::success(['Transaction_url' => $response->getData(true)['data']['source']['transaction_url'] ], ["Redirect To This Link To Confirm Payment"]);
         }else{
-            $package->payment_status = 'rejected';
+            $order->payment_status = 'rejected';
             return Response::error($response->getData(true)['errors']['errors']);
         }
     }
