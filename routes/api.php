@@ -191,7 +191,7 @@ Route::prefix('admins')->group(function () {
             Route::delete('{coupon}', [CouponController::class, 'destroy']);
             Route::patch('{coupon}/toggle-status', [CouponController::class, 'toggleStatus']);
         });
-        // Brands
+        // AdvertisingPost
         Route::prefix('advertising-posts')->group(function () {
             Route::get('/', [AdvertisingPostController::class, 'index']);
             Route::get('list', [AdvertisingPostController::class, 'list']);

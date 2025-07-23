@@ -19,7 +19,8 @@ class GardenRequestStoringRequest extends FormRequest
         return [
             'unit_type' => 'required|string|max:255',
             'space'     => 'required|string|max:100',
-            'location'  => 'required|string|max:255',
+            'longitude'  => 'required|string|max:255',
+            'latitude'  => 'required|string|max:255',
             'visit_type'=> 'required|in:once,annually',
             'notes'     => 'nullable|string|max:1000',
             'action'    => 'nullable|string|max:255',

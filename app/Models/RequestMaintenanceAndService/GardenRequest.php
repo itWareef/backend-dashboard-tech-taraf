@@ -16,6 +16,8 @@ class GardenRequest extends Model implements HasManyRelations
         'type',
         'notes',
         'action',
+        'latitude',
+        'longitude',
     ];
 
     public const TYPES =['gardening','landscape_services','public_health'];
