@@ -91,7 +91,7 @@ Route::prefix('customer')->group(function () {
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('brands/list/{brand}', [BrandController::class, 'show']);
     Route::get('advertising-posts/list/', [AdvertisingPostController::class, 'list']);
-    Route::prefix('brands/favourites')->group(function () {
+    Route::middleware('auth:customer')->prefix('brands/favourites')->group(function () {
         Route::get('/', [FavouriteBrandController::class, 'index']);
         Route::post('/{brand}/toggle', [FavouriteBrandController::class, 'toggle']);
     });
