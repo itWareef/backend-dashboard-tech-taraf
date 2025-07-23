@@ -18,7 +18,6 @@ class UpdateAdvertisingPostRequest extends FormRequest
     {
         return [
             'title'        => 'required|string|max:255',
-            'picture'     => 'required',
         ];
     }
 }
