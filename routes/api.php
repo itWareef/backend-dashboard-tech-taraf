@@ -89,7 +89,7 @@ Route::prefix('customer')->group(function () {
     // Store
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('brands/list/{brand}', [BrandController::class, 'show']);
-    Route::get('advertising-post/list/', [AdvertisingPostController::class, 'list']);
+    Route::get('advertising-posts/list/', [AdvertisingPostController::class, 'list']);
 
     Route::prefix('cart')->middleware('auth:customer')->group(function () {
         Route::get('/', [CartController::class, 'index']);
@@ -192,7 +192,7 @@ Route::prefix('admins')->group(function () {
             Route::patch('{coupon}/toggle-status', [CouponController::class, 'toggleStatus']);
         });
         // Brands
-        Route::prefix('advertising-post')->group(function () {
+        Route::prefix('advertising-posts')->group(function () {
             Route::get('/', [AdvertisingPostController::class, 'index']);
             Route::get('list', [AdvertisingPostController::class, 'list']);
             Route::post('/', [AdvertisingPostController::class, 'store']);
