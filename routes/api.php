@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Store\AdvertisingPostController;
 use App\Http\Controllers\Api\Store\BrandController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CouponController;
+use App\Http\Controllers\Api\Store\FavouriteBrandController;
 use App\Http\Controllers\Api\Store\FeatureController;
 use App\Http\Controllers\Api\Store\OrderController;
 use App\Http\Controllers\Api\Store\SectionController;
@@ -90,7 +91,10 @@ Route::prefix('customer')->group(function () {
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('brands/list/{brand}', [BrandController::class, 'show']);
     Route::get('advertising-posts/list/', [AdvertisingPostController::class, 'list']);
-
+    Route::prefix('brands/favourites')->group(function () {
+        Route::get('/', [FavouriteBrandController::class, 'index']);
+        Route::post('/{brand}/toggle', [FavouriteBrandController::class, 'toggle']);
+    });
     Route::prefix('cart')->middleware('auth:customer')->group(function () {
         Route::get('/', [CartController::class, 'index']);
         Route::post('/', [CartController::class, 'store']);

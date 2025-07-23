@@ -6,6 +6,7 @@ use App\Core\Interfaces\FileUpload;
 use App\Models\HandleToArrayTrait;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
+use App\Models\Store\Brand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -74,4 +75,10 @@ class Customer extends Authenticatable implements FileUpload
             'picture'
         ];
     }
+    public function favouriteBrands()
+    {
+        return $this->belongsToMany(Brand::class, 'brand_favourites')
+            ->withTimestamps();
+    }
+
 }
