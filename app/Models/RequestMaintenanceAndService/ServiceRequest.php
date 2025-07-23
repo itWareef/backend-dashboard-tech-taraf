@@ -24,6 +24,7 @@ class ServiceRequest extends Model implements FileUpload
         'notes',
         'rating',
         'visits_count',
+        'type',
         'status',
     ];
 
