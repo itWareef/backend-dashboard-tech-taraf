@@ -22,8 +22,7 @@ return new class extends Migration
             $table->string('area')->nullable(); // المساحة
             $table->string('unit_number')->nullable(); // رقم الوحدة
             $table->string('ownership_number')->nullable(); // رقم الملك
-            $table->string('latitude')->nullable(); // الموقع الجغرافي
-            $table->string('longitude')->nullable(); // الموقع الجغرافي
+            $table->string('location');
             $table->string('contract_type'); // نوع العقد
             $table->string('payment_status')->default('لم يتم الدفع'); // حالة السداد
             $table->string('request_status')->default('لم يتم الرد');  // حالة الطلب

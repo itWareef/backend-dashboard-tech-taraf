@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('type',['service','cleaning']);
             $table->foreignId('requester_id')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('project');
+            $table->string('location');
             $table->string('unit');
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('date');

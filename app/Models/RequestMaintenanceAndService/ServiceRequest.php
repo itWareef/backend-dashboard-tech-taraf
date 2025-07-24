@@ -13,7 +13,7 @@ class ServiceRequest extends Model implements FileUpload
     use HandleToArrayTrait;
     protected $fillable = [
         'requester_id',
-        'project',
+        'location',
         'unit',
         'category_id',
         'date',
