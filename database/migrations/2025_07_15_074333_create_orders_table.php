@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('day');
 
             $table->text('address')->nullable(); // في حال لم يختر وحدة
-            $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete(); // في
             $table->timestamps();
         });
     }
