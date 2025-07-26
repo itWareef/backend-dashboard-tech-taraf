@@ -14,8 +14,8 @@ class StoreContractRequest extends FormRequest
     public function rules()
     {
         return [
-            'developer'        => 'required|string|max:255',
-            'project'          => 'required|string|max:255',
+            'developer'        => 'nullable|string|max:255',
+            'project'          => 'nullable|string|max:255',
             'property_type'    => 'required|string|in:دور,فيلا,شقة,بنتهاوس,تاون هاوس,عمارة سكنية',
             'property_age'     => 'required|string|max:100',
             'area'             => 'required|string|max:100',
