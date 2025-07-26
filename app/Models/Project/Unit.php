@@ -16,6 +16,7 @@ class Unit extends Model
         'villa_number',
         'deed_number',
         'purchase_date',
+        'space',
         'number'
     ];
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('villa_number')->nullable();
             $table->string('deed_number')->nullable();
             $table->string('number')->nullable();
+            $table->string('space')->nullable();
             $table->date('purchase_date')->nullable();
             $table->timestamps();
         });
