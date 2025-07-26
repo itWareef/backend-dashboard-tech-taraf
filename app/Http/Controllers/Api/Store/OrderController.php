@@ -68,8 +68,8 @@ class OrderController extends Controller
                 'customer_email'          => $request->email,
                 'customer_phone'          => $request->phone,
                 'address'        => $request->address,
-                'unit'           => $request->unit,
-                'location_map'   => $request->location_map,
+                'unit_id'        => $request->unit_id,
+                'day'        => $request->day,
                 'date' => Carbon::now()->addDays(4)->toDateString(),
             ]);
 

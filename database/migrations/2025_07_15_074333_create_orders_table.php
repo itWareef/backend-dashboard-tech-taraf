@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('customer_email');
             $table->string('customer_phone');
             $table->string('payment_method');
+            $table->string('day');
 
             $table->text('address')->nullable(); // في حال لم يختر وحدة
             $table->foreignId('unit_id')->nullable()->constrained()->nullOnDelete(); // في
