@@ -35,7 +35,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
         $data = $request->all();
         $order =Order::find($data['order_id']);
         $data['amount'] = $order->total_price * 100;
-        $data['description'] = "Pay Order #" . $data['id'];
+        $data['description'] = "Pay Order #" . $order->id;
         $data['currency'] = "SAR";
         $data['source'] =[
         'type' => $request->card,
