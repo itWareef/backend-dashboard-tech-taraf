@@ -21,8 +21,7 @@ class StoreContractRequest extends FormRequest
             'area'             => 'required|string|max:100',
             'unit_number'      => 'required|string|max:100',
             'ownership_number' => 'required|string|max:100',
-            'longitude'  => 'required|string|max:255',
-            'latitude'  => 'required|string|max:255',
+            'location'  => 'required|string|max:255',
             'contract_type'    => 'required|array|max:255',
         ];
     }
