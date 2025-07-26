@@ -87,7 +87,7 @@ class OrderController extends Controller
                 $q->where('customer_id', $user->id);
             })->delete();
 
-            return Response::success([], ['تم إنشاء الطلب بنجاح']);
+            return Response::success(['id' => $order->id , 'date' => $order->date], ['تم إنشاء الطلب بنجاح']);
         });
     }
 }
