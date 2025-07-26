@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('deed_number')->nullable();
             $table->string('number')->nullable();
             $table->string('space')->nullable();
+            $table->string('location')->nullable();
             $table->date('purchase_date')->nullable();
             $table->timestamps();
         });

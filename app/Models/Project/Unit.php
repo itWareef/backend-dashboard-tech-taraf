@@ -17,6 +17,7 @@ class Unit extends Model
         'deed_number',
         'purchase_date',
         'space',
+         'location',
         'number'
     ];
 
