@@ -17,7 +17,6 @@ class StoreMaintenanceRequest extends FormRequest
     public function rules()
     {
         return [
-            'project'      => 'required|string|max:255',
             'unit'         => 'required|string|max:255',
             'category_id'  => 'required|exists:categories,id',
             'date'         => 'required|date',
