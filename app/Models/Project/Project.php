@@ -2,12 +2,12 @@
 
 namespace App\Models\Project;
 
-use App\Core\Interfaces\HasManyRelations;
+use App\Core\Interfaces\ManyToManyRelations;
 use App\Models\Developer;
 use App\Models\Guarantee;
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model implements HasManyRelations
+class Project extends Model implements ManyToManyRelations
 {
     protected $fillable=[
         'name',
@@ -23,13 +23,14 @@ class Project extends Model implements HasManyRelations
     }
     public function guarantees()
     {
-        return $this->belongsToMany(Guarantee::class, 'gurantee_project');
+        return $this->belongsToMany(Guarantee::class, 'gurantee_project','project_id','guarantee_id');
     }
 
-    public function getHasManyRelations(): array
+
+
+    public function getManyToManyRelations(): array
     {
         return [
             'guarantees'
-        ];
-    }
+        ];    }
 }

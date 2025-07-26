@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('guarantees', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('picture');
+            $table->string('duration');
+            $table->foreignId('supplier_id')->constrained('suppliers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

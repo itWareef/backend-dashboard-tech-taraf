@@ -5,7 +5,9 @@ use App\Http\Controllers\Api\ContractRequestController;
 use App\Http\Controllers\Api\CustomerController\CustomerController;
 use App\Http\Controllers\Api\DeveloperController;
 use App\Http\Controllers\Api\GpsLocationController;
+use App\Http\Controllers\Api\GuaranteeController;
 use App\Http\Controllers\Api\OtpController;
+use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\Store\AdvertisingPostController;
 use App\Http\Controllers\Api\Store\BrandController;
 use App\Http\Controllers\Api\Store\CartController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\Api\Store\FeatureController;
 use App\Http\Controllers\Api\Store\OrderController;
 use App\Http\Controllers\Api\Store\SectionController;
 use App\Http\Controllers\Api\SupervisorController;
+use App\Http\Controllers\Api\SupplierController;
 use App\Http\Controllers\Auth\PasswordOtpController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PaymentController;
@@ -155,8 +158,30 @@ Route::prefix('admins')->group(function () {
     Route::prefix('developers')->group(function () {
         Route::get('/', [DeveloperController::class, 'index']);
         Route::post('/', [DeveloperController::class, 'store']);
+        Route::get('list', [DeveloperController::class, 'list']);
         Route::post('{developer}', [DeveloperController::class, 'update']);
         Route::delete('{developer}', [DeveloperController::class, 'destroy']);
+    });
+    Route::prefix('suppliers')->group(function () {
+        Route::get('/', [SupplierController::class, 'index']);
+        Route::post('/', [SupplierController::class, 'store']);
+        Route::get('list', [SupplierController::class, 'list']);
+        Route::post('{supplier}', [SupplierController::class, 'update']);
+        Route::delete('{supplier}', [SupplierController::class, 'destroy']);
+    });
+    Route::prefix('guarantees')->group(function () {
+        Route::get('/', [GuaranteeController::class, 'index']);
+        Route::get('list', [GuaranteeController::class, 'list']);
+        Route::post('/', [GuaranteeController::class, 'store']);
+        Route::post('{guarantee}', [GuaranteeController::class, 'update']);
+        Route::delete('{guarantee}', [GuaranteeController::class, 'destroy']);
+    });
+    Route::prefix('projects')->group(function () {
+        Route::get('/', [ProjectController::class, 'index']);
+        Route::get('list', [ProjectController::class, 'list']);
+        Route::post('/', [ProjectController::class, 'store']);
+        Route::post('{project}', [ProjectController::class, 'update']);
+        Route::delete('{project}', [ProjectController::class, 'destroy']);
     });
     // Store Management
     Route::prefix('store')->group(function () {

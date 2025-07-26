@@ -15,6 +15,7 @@ class UnitController extends Controller
     public function listForCustomer()
     {
         $data = QueryBuilder::for(Unit::class)
+            ->with('project.guarantees')
                 ->where('owner_id' , auth('customer')->id())
                 ->allowedFilters([
                     AllowedFilter::partial('project_id')
