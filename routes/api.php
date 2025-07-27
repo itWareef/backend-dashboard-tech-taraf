@@ -117,13 +117,13 @@ Route::prefix('customer')->group(function () {
     Route::post('orders', [OrderController::class, 'store']);
 });
 Route::prefix('main-developers')->group(function () {
-    Route::get('list', [MainDeveloperController::class, 'list']);
-    Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
-});
-Route::prefix('main-projects')->group(function () {
-    Route::get('list', [MainProjectController::class, 'list']);
-    Route::get('{mainProject}', [MainProjectController::class, 'show']);
-});
+        Route::get('list', [MainDeveloperController::class, 'list']);
+        Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
+    });
+    Route::prefix('main-projects')->group(function () {
+        Route::get('list', [MainProjectController::class, 'list']);
+        Route::get('{mainProject}', [MainProjectController::class, 'show']);
+    });
 // Supervisor Routes
 Route::prefix('supervisors')->group(function () {
     // Authentication
