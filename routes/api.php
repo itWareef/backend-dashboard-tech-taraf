@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\ContractRequestController;
 use App\Http\Controllers\Api\CustomerController\CustomerController;
 use App\Http\Controllers\Api\DeveloperController;
+use App\Http\Controllers\Api\MainDeveloperController;
+use App\Http\Controllers\Api\MainProjectController;
 use App\Http\Controllers\Api\GpsLocationController;
 use App\Http\Controllers\Api\GuaranteeController;
 use App\Http\Controllers\Api\OtpController;
@@ -108,6 +110,14 @@ Route::prefix('customer')->group(function () {
         Route::delete('/{cart}', [CartController::class, 'destroy']);
     });
 
+    Route::prefix('main-developers')->group(function () {
+        Route::get('list', [MainDeveloperController::class, 'list']);
+        Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
+    });
+    Route::prefix('main-projects')->group(function () {
+        Route::get('list', [MainProjectController::class, 'list']);
+        Route::get('{mainProject}', [MainProjectController::class, 'show']);
+    });
     Route::post('/payment/', [PaymentController::class, 'paymentProcess'])->middleware(['auth:customer']);
 
     Route::post('coupons/validate', [CouponController::class, 'validateCoupon']);
@@ -164,6 +174,14 @@ Route::prefix('admins')->group(function () {
         Route::post('{developer}', [DeveloperController::class, 'update']);
         Route::delete('{developer}', [DeveloperController::class, 'destroy']);
     });
+    Route::prefix('main-developers')->group(function () {
+        Route::get('/', [MainDeveloperController::class, 'index']);
+        Route::post('/', [MainDeveloperController::class, 'store']);
+        Route::get('list', [MainDeveloperController::class, 'list']);
+        Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
+        Route::post('{mainDeveloper}', [MainDeveloperController::class, 'update']);
+        Route::delete('{mainDeveloper}', [MainDeveloperController::class, 'destroy']);
+    });
     Route::prefix('suppliers')->group(function () {
         Route::get('/', [SupplierController::class, 'index']);
         Route::post('/', [SupplierController::class, 'store']);
@@ -184,6 +202,15 @@ Route::prefix('admins')->group(function () {
         Route::post('/', [ProjectController::class, 'store']);
         Route::post('{project}', [ProjectController::class, 'update']);
         Route::delete('{project}', [ProjectController::class, 'destroy']);
+    });
+    Route::prefix('main-projects')->group(function () {
+        Route::get('/', [MainProjectController::class, 'index']);
+        Route::post('/', [MainProjectController::class, 'store']);
+        Route::get('list', [MainProjectController::class, 'list']);
+        Route::get('{mainProject}', [MainProjectController::class, 'show']);
+        Route::post('{mainProject}', [MainProjectController::class, 'update']);
+        Route::delete('{mainProject}', [MainProjectController::class, 'destroy']);
+        Route::delete('{mainProject}/pictures/{picture}', [MainProjectController::class, 'deletePicture']);
     });
     // Store Management
     Route::prefix('store')->group(function () {
