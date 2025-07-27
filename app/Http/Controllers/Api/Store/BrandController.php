@@ -29,9 +29,24 @@ class BrandController extends Controller
     public function update( Brand $brand){
         return (new BrandUpdatingService($brand))->update();
     }
-    public function show( Brand $brand){
-        return Response::success($brand->load(['features','section','pictures'])->toArray());
+    public function show(Brand $brand)
+    {
+        $customer = auth('customer')->user();
+    
+        // Check if the brand is in the customer's favourites
+        $isFavorite = $customer
+            ? $customer->favouriteBrands()->where('brand_id', $brand->id)->exists()
+            : false;
+    
+        $brand->load(['features', 'section', 'pictures']);
+    
+        // Add is_favorite to the response
+        $data = $brand->toArray();
+        $data['is_favorite'] = $isFavorite;
+    
+        return Response::success($data);
     }
+    
     public function list()
     {
         $data = QueryBuilder::for(Brand::class)->get()->toArray();
