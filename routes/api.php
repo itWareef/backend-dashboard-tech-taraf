@@ -110,20 +110,20 @@ Route::prefix('customer')->group(function () {
         Route::delete('/{cart}', [CartController::class, 'destroy']);
     });
 
-    Route::prefix('main-developers')->group(function () {
-        Route::get('list', [MainDeveloperController::class, 'list']);
-        Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
-    });
-    Route::prefix('main-projects')->group(function () {
-        Route::get('list', [MainProjectController::class, 'list']);
-        Route::get('{mainProject}', [MainProjectController::class, 'show']);
-    });
+    
     Route::post('/payment/', [PaymentController::class, 'paymentProcess'])->middleware(['auth:customer']);
 
     Route::post('coupons/validate', [CouponController::class, 'validateCoupon']);
     Route::post('orders', [OrderController::class, 'store']);
 });
-
+Route::prefix('main-developers')->group(function () {
+    Route::get('list', [MainDeveloperController::class, 'list']);
+    Route::get('{mainDeveloper}', [MainDeveloperController::class, 'show']);
+});
+Route::prefix('main-projects')->group(function () {
+    Route::get('list', [MainProjectController::class, 'list']);
+    Route::get('{mainProject}', [MainProjectController::class, 'show']);
+});
 // Supervisor Routes
 Route::prefix('supervisors')->group(function () {
     // Authentication
