@@ -11,8 +11,12 @@ use App\Http\Requests\VerifyOtpRequest;
 use App\Models\AuthenticationModule\Customer\CustomerAddress;
 use App\Models\Customer\Customer;
 use App\Models\Project\Contract;
+use App\Models\RequestMaintenanceAndService\ContractRequest;
+use App\Models\RequestMaintenanceAndService\GardenRequest;
+use App\Models\RequestMaintenanceAndService\ServiceRequest;
 use App\Models\Requests\MaintenanceRequest;
 use App\Models\Requests\PlantingRequest;
+use App\Models\Store\Order;
 use App\Models\Support;
 use App\Services\AddNewAddressToCustomer;
 use App\Services\CustomerServices\CustomerAuthService;
@@ -149,12 +153,32 @@ class CustomerController extends Controller
     }
     public function updatePassword(CustomerUpdatePasswordRequest $request)
     {
-        $user = auth()->user();
+        $user = auth('customer')->user();
 
         $user->update([
             'password' => Hash::make($request->password),
         ]);
 
         return Response::success([],['تم تغير الباسورد بنجاح']);
+    }
+    public function myRequests(){
+            $userId = auth('customer')->user()->id;
+            $orders = QueryBuilder::for(Order::class)->with('items')->where('customer_id' , $userId)->get();
+            $requestService = QueryBuilder::for(ServiceRequest::class)->where('requester_id',$userId)->get();
+            $requestContract = QueryBuilder::for(ContractRequest::class)->where('requester_id',$userId)->get();
+            $requestPlanting = QueryBuilder::for(GardenRequest::class)->with('attachments')->where('requester_id',$userId)->get();
+            $allRequests = $requestService
+                ->concat($requestContract)
+                ->concat($requestPlanting)
+                ->sortByDesc('created_at')
+                ->values();
+
+            // تجميع البيانات النهائية
+            $data = [
+                'order' => $orders,
+                'services' => $allRequests
+            ];
+            return Response::success($data)
+
     }
 }
