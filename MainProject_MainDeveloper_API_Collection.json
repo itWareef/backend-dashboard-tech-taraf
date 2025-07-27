@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "main-project-developer-api",
+		"name": "MainProject & MainDeveloper API",
+		"description": "API collection for managing Main Projects and Main Developers",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Main Developers",
+			"item": [
+				{
+					"name": "Get All Main Developers (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers"
+							]
+						},
+						"description": "Get paginated list of all main developers"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Main Developers (List)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers",
+								"list"
+							]
+						},
+						"description": "Get all main developers without pagination"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Main Developer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "شركة التطوير العقاري المحدودة",
+									"type": "text",
+									"description": "اسم المطور"
+								},
+								{
+									"key": "space",
+									"value": "100000 متر مربع",
+									"type": "text",
+									"description": "المساحة الإجمالية"
+								},
+								{
+									"key": "space_building",
+									"value": "80000 متر مربع",
+									"type": "text",
+									"description": "مساحة البناء"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"description": "صورة المطور"
+								},
+								{
+									"key": "picture_logo",
+									"type": "file",
+									"description": "شعار المطور"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers"
+							]
+						},
+						"description": "Create a new main developer"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Main Developer by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers/{{main_developer_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers",
+								"{{main_developer_id}}"
+							]
+						},
+						"description": "Get a specific main developer by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Main Developer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "شركة التطوير العقاري المحدثة",
+									"type": "text",
+									"description": "اسم المطور (اختياري للتحديث)"
+								},
+								{
+									"key": "space",
+									"value": "120000 متر مربع",
+									"type": "text",
+									"description": "المساحة الإجمالية (اختياري للتحديث)"
+								},
+								{
+									"key": "space_building",
+									"value": "95000 متر مربع",
+									"type": "text",
+									"description": "مساحة البناء (اختياري للتحديث)"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"description": "صورة المطور (اختياري للتحديث)"
+								},
+								{
+									"key": "picture_logo",
+									"type": "file",
+									"description": "شعار المطور (اختياري للتحديث)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers/{{main_developer_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers",
+								"{{main_developer_id}}"
+							]
+						},
+						"description": "Update an existing main developer"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Main Developer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-developers/{{main_developer_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-developers",
+								"{{main_developer_id}}"
+							]
+						},
+						"description": "Delete a main developer"
+					},
+					"response": []
+				}
+			],
+			"description": "Main Developer management endpoints"
+		},
+		{
+			"name": "Main Projects",
+			"item": [
+				{
+					"name": "Get All Main Projects (Paginated)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects"
+							]
+						},
+						"description": "Get paginated list of all main projects"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Main Projects (List)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects",
+								"list"
+							]
+						},
+						"description": "Get all main projects without pagination"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Main Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "مشروع الواحة السكني",
+									"type": "text",
+									"description": "اسم المشروع"
+								},
+								{
+									"key": "description",
+									"value": "مشروع سكني فاخر يضم شقق وفلل عصرية مع جميع الخدمات والمرافق",
+									"type": "text",
+									"description": "وصف المشروع"
+								},
+								{
+									"key": "developer_id",
+									"value": "1",
+									"type": "text",
+									"description": "معرف المطور"
+								},
+								{
+									"key": "low_price",
+									"value": "500000",
+									"type": "text",
+									"description": "السعر الأدنى"
+								},
+								{
+									"key": "high_price",
+									"value": "2000000",
+									"type": "text",
+									"description": "السعر الأعلى"
+								},
+								{
+									"key": "unit_count",
+									"value": "150",
+									"type": "text",
+									"description": "عدد الوحدات"
+								},
+								{
+									"key": "price_precentage",
+									"value": "15",
+									"type": "text",
+									"description": "نسبة السعر"
+								},
+								{
+									"key": "youtube_link",
+									"value": "https://www.youtube.com/watch?v=example",
+									"type": "text",
+									"description": "رابط اليوتيوب"
+								},
+								{
+									"key": "low_space",
+									"value": "80",
+									"type": "text",
+									"description": "المساحة الأدنى (متر مربع)"
+								},
+								{
+									"key": "high_space",
+									"value": "300",
+									"type": "text",
+									"description": "المساحة الأعلى (متر مربع)"
+								},
+								{
+									"key": "pictures[]",
+									"type": "file",
+									"description": "صور المشروع (يمكن رفع عدة صور)"
+								},
+								{
+									"key": "pictures[]",
+									"type": "file",
+									"description": "صور المشروع (يمكن رفع عدة صور)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects"
+							]
+						},
+						"description": "Create a new main project with pictures"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Main Project by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects/{{main_project_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects",
+								"{{main_project_id}}"
+							]
+						},
+						"description": "Get a specific main project by ID with developer and pictures"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Main Project",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "مشروع الواحة السكني المحدث",
+									"type": "text",
+									"description": "اسم المشروع (اختياري للتحديث)"
+								},
+								{
+									"key": "description",
+									"value": "مشروع سكني فاخر محدث يضم شقق وفلل عصرية مع جميع الخدمات والمرافق",
+									"type": "text",
+									"description": "وصف المشروع (اختياري للتحديث)"
+								},
+								{
+									"key": "developer_id",
+									"value": "1",
+									"type": "text",
+									"description": "معرف المطور (اختياري للتحديث)"
+								},
+								{
+									"key": "low_price",
+									"value": "550000",
+									"type": "text",
+									"description": "السعر الأدنى (اختياري للتحديث)"
+								},
+								{
+									"key": "high_price",
+									"value": "2200000",
+									"type": "text",
+									"description": "السعر الأعلى (اختياري للتحديث)"
+								},
+								{
+									"key": "unit_count",
+									"value": "160",
+									"type": "text",
+									"description": "عدد الوحدات (اختياري للتحديث)"
+								},
+								{
+									"key": "price_precentage",
+									"value": "18",
+									"type": "text",
+									"description": "نسبة السعر (اختياري للتحديث)"
+								},
+								{
+									"key": "youtube_link",
+									"value": "https://www.youtube.com/watch?v=updated-example",
+									"type": "text",
+									"description": "رابط اليوتيوب (اختياري للتحديث)"
+								},
+								{
+									"key": "low_space",
+									"value": "85",
+									"type": "text",
+									"description": "المساحة الأدنى (اختياري للتحديث)"
+								},
+								{
+									"key": "high_space",
+									"value": "320",
+									"type": "text",
+									"description": "المساحة الأعلى (اختياري للتحديث)"
+								},
+								{
+									"key": "pictures[]",
+									"type": "file",
+									"description": "صور إضافية للمشروع (اختياري للتحديث)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects/{{main_project_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects",
+								"{{main_project_id}}"
+							]
+						},
+						"description": "Update an existing main project"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Main Project",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects/{{main_project_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects",
+								"{{main_project_id}}"
+							]
+						},
+						"description": "Delete a main project"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Project Picture",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/admins/main-projects/{{main_project_id}}/pictures/{{picture_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"main-projects",
+								"{{main_project_id}}",
+								"pictures",
+								"{{picture_id}}"
+							]
+						},
+						"description": "Delete a specific picture from a project"
+					},
+					"response": []
+				}
+			],
+			"description": "Main Project management endpoints"
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admins/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admins",
+								"login"
+							]
+						},
+						"description": "Login as admin to get access token"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "your_admin_token_here",
+			"type": "string"
+		},
+		{
+			"key": "main_developer_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "main_project_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "picture_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+} 

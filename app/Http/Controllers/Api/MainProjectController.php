@@ -33,7 +33,6 @@ class MainProjectController extends Controller
      */
     public function store()
     {
-        dd(request()->all());
         return (new MainProjectService())->storeNewRecord();
     }
 
