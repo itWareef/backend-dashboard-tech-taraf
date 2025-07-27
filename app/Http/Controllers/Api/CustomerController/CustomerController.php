@@ -178,7 +178,6 @@ class CustomerController extends Controller
                 'order' => $orders,
                 'services' => $allRequests
             ];
-            return Response::success($data)
-
+            return Response::success($data);
     }
 }
