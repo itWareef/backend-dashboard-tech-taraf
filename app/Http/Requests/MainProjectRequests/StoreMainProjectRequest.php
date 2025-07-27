@@ -24,7 +24,7 @@ class StoreMainProjectRequest extends FormRequest
             'youtube_link' => 'required|string|max:255',
             'low_space' => 'required|string|max:255',
             'high_space' => 'required|string|max:255',
-            'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'pictures.*.path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 

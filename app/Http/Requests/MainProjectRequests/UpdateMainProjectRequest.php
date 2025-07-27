@@ -24,7 +24,7 @@ class UpdateMainProjectRequest extends FormRequest
             'youtube_link' => 'required_with:youtube_link|string|max:255',
             'low_space' => 'required_with:low_space|string|max:255',
             'high_space' => 'required_with:high_space|string|max:255',
-            'pictures.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'pictures.*.path' => 'nullable',
         ];
     }
 
