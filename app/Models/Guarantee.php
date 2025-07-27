@@ -15,7 +15,25 @@ class Guarantee extends Model implements FileUpload
         'supplier_id',
     ];
 
+    protected $appends = ['expiry_date'];
 
+    protected $hidden = ['unit_purchase_date']; // لإخفاء الخاصية المؤقتة من JSON
+    
+    public function getExpiryDateAttribute()
+    {
+        if (!isset($this->unit_purchase_date)) {
+            return null;
+        }
+    
+        try {
+            return \Carbon\Carbon::parse($this->unit_purchase_date)
+                ->addYears($this->duration)
+                ->toDateString();
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+    
     public function supplier(){
         return $this->belongsTo(Supplier::class);
     }

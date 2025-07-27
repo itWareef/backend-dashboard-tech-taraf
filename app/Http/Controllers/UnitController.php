@@ -14,15 +14,26 @@ class UnitController extends Controller
 {
     public function listForCustomer()
     {
-        $data = QueryBuilder::for(Unit::class)
-            ->with('project.guarantees')
-                ->where('owner_id' , auth('customer')->id())
-                ->allowedFilters([
-                    AllowedFilter::partial('project_id')
-                ])
+        $units = QueryBuilder::for(Unit::class)
+            ->with(['project.guarantees.supplier', 'project.developer'])
+            ->where('owner_id', auth('customer')->id())
+            ->allowedFilters([
+                AllowedFilter::partial('project_id')
+            ])
             ->get();
-        return Response::success(['data' => $data]);
+    
+        // Inject unit purchase_date to each guarantee so expiry_date can be calculated
+        $units->each(function ($unit) {
+            $purchaseDate = $unit->purchase_date;
+    
+            $unit->project->guarantees->each(function ($guarantee) use ($purchaseDate) {
+                $guarantee->unit_purchase_date = $purchaseDate; // Needed for accessor
+            });
+        });
+    
+        return Response::success(['data' => $units]);
     }
+    
     public function listProjectsForCustomer()
     {
         $data = QueryBuilder::for(Project::class)
