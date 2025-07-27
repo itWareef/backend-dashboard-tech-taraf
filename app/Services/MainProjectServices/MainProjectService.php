@@ -22,10 +22,4 @@ class MainProjectService extends AbstractClassHandleStoreData
         return "تم إضافة المشروع الرئيسي بنجاح";
     }
 
-    protected function getDataHandle(): array
-    {
-        $data = parent::getDataHandle();
-        // Add any additional data processing here if needed
-        return $data;
-    }
 } 
