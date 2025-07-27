@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Http\Controllers\Controller;
+use App\Models\Store\Brand;
 use App\Models\Store\BrandFavourite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -18,7 +19,7 @@ class FavouriteBrandController extends Controller
         return Response::success($favourites);
     }
 
-    public function toggle(Request $request, $brand)
+    public function toggle(Request $request, Brand $brand)
     {
         $customer = $request->user('customer');
 
