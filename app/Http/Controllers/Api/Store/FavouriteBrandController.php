@@ -12,12 +12,32 @@ class FavouriteBrandController extends Controller
 {
     public function index(Request $request)
     {
-        $favourites = $request->user('customer')
-            ->favouriteBrands()
-            ->get()->toArray();
+        $customer = $request->user('customer');
 
-        return Response::success($favourites);
+        // Get favorite brands
+        $favourites = $customer->favouriteBrands()->with('products')->get();
+
+        // Get all brand_ids that exist in the customer's cart (via product.brand_id)
+        $brandIdsInCart = collect();
+
+        if ($customer->cart) {
+            $brandIdsInCart = $customer->cart->items()
+                ->whereHas('product.brand') // Ensure product and brand exist
+                ->with('product.brand:id') // Optional optimization
+                ->get()
+                ->pluck('product.brand_id')
+                ->unique();
+        }
+
+        // Append in_cart flag to each favorite brand
+        $favourites->transform(function ($brand) use ($brandIdsInCart) {
+            $brand->in_cart = $brandIdsInCart->contains($brand->id);
+            return $brand;
+        });
+
+        return Response::success($favourites->toArray());
     }
+
 
     public function toggle(Request $request, Brand $brand)
     {
@@ -34,7 +54,7 @@ class FavouriteBrandController extends Controller
 
         BrandFavourite::create([
             'customer_id' => $customer->id,
-            'brand_id'    => $brand->id
+            'brand_id' => $brand->id
         ]);
 
         return Response::success([], ['تم إضافة المنتج للمفضلة']);

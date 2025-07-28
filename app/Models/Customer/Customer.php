@@ -7,6 +7,7 @@ use App\Models\HandleToArrayTrait;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Store\Brand;
+use App\Models\Store\Cart;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +17,7 @@ use Laravel\Passport\HasApiTokens;
 class Customer extends Authenticatable implements FileUpload
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory , Notifiable,HasApiTokens ,HandleToArrayTrait;
+    use HasFactory, Notifiable, HasApiTokens, HandleToArrayTrait;
     protected $fillable = [
         'name',
         'first_name',
@@ -31,7 +32,7 @@ class Customer extends Authenticatable implements FileUpload
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($customer) {
             if (empty($customer->number)) {
                 $customer->number = NumberingService::generateNumber(Customer::class);
@@ -63,7 +64,7 @@ class Customer extends Authenticatable implements FileUpload
     }
     public function units()
     {
-        return $this->hasMany(Unit::class,'owner_id');
+        return $this->hasMany(Unit::class, 'owner_id');
     }
     public function projects()
     {
@@ -79,7 +80,7 @@ class Customer extends Authenticatable implements FileUpload
 
     public function documentFullPathStore(): string
     {
-       return 'customers/';
+        return 'customers/';
     }
 
     public function requestKeysForFile(): array
@@ -93,5 +94,10 @@ class Customer extends Authenticatable implements FileUpload
         return $this->belongsToMany(Brand::class, 'brand_favourites')
             ->withTimestamps();
     }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class, 'customer_id');
+    }
+
 
 }

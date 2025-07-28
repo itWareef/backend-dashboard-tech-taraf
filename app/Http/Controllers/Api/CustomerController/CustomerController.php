@@ -76,10 +76,7 @@ class CustomerController extends Controller
         ])->get(['id' ,'name','picture'])->toArray();
         return Response::success($data);
     }
-    public function export()
-    {
-        return (new CustomerExportService())->export();
-    }
+  
     public function login(CustomerLoginRequest $request)
     {
         return (new CustomerAuthService())->login($request);
@@ -140,18 +137,7 @@ class CustomerController extends Controller
         $customer = $request->user('customer');
         return (new CustomerUpdatingService($customer))->update() ;
     }
-    public function addAdress(){
-        return (new AddNewAddressToCustomer())->storeNewRecord();
-    }
-    public function allAdress(){
-        $data = QueryBuilder::for(CustomerAddress::class)
-        ->where('customer_id', auth('customer')->user()->id)
-        ->with(['city','country'])
-        ->get()
-        ->toArray();
-        return Response::success($data);
-    }
-    public function updatePassword(CustomerUpdatePasswordRequest $request)
+        public function updatePassword(CustomerUpdatePasswordRequest $request)
     {
         $user = auth('customer')->user();
 

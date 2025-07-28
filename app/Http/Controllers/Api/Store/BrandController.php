@@ -12,41 +12,56 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class BrandController extends Controller
 {
-    public function index(){
-        $data = QueryBuilder::for(Brand::class)->with(['features','section','pictures'])->paginate(20);
+    public function index()
+    {
+        $data = QueryBuilder::for(Brand::class)->with(['features', 'section', 'pictures'])->paginate(20);
 
         return response()->json([
             'data' => $data
         ]);
     }
-    public function store(){
+    public function store()
+    {
         return (new BrandStoringService())->storeNewRecord();
     }
-    public function destroy(Brand $brand){
+    public function destroy(Brand $brand)
+    {
         return (new BrandDeletingService($brand))->delete();
     }
 
-    public function update( Brand $brand){
+    public function update(Brand $brand)
+    {
         return (new BrandUpdatingService($brand))->update();
     }
     public function show(Brand $brand)
     {
         $customer = auth('customer')->user();
-    
-        // Check if the brand is in the customer's favourites
+
+        // Check if brand is in customer's favorites
         $isFavorite = $customer
             ? $customer->favouriteBrands()->where('brand_id', $brand->id)->exists()
             : false;
-    
+
+        // Check if the brand exists in any of the customer's cart items
+            if ($customer && $customer->cart) {
+                $isInCart = $customer->cart->items()
+                    ->whereHas('product', function ($query) use ($brand) {
+                        $query->where('brand_id', $brand->id);
+                    })->exists();
+            }
+
+        // Eager load relationships
         $brand->load(['features', 'section', 'pictures']);
-    
-        // Add is_favorite to the response
+
+        // Convert brand to array and append flags
         $data = $brand->toArray();
         $data['is_favorite'] = $isFavorite;
-    
+        $data['in_cart'] = $isInCart;
+
         return Response::success($data);
     }
-    
+
+
     public function list()
     {
         $data = QueryBuilder::for(Brand::class)->get()->toArray();
