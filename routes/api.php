@@ -124,6 +124,8 @@ Route::prefix('main-developers')->group(function () {
         Route::get('list', [MainProjectController::class, 'list']);
         Route::get('{mainProject}', [MainProjectController::class, 'show']);
     });
+ Route::get('list-pictures', [MainProjectController::class, 'listPictures']);
+
 // Supervisor Routes
 Route::prefix('supervisors')->group(function () {
     // Authentication

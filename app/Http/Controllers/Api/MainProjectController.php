@@ -79,4 +79,9 @@ class MainProjectController extends Controller
         $data = QueryBuilder::for(MainProject::class)->with(['developer', 'pictures'])->get()->toArray();
         return Response::success($data);
     }
+    public function listPictures()
+    {
+        $data = QueryBuilder::for(MainProjectPicture::class)->get()->toArray();
+        return Response::success($data);
+    }
 } 
