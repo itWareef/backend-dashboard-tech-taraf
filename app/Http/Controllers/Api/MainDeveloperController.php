@@ -63,7 +63,7 @@ class MainDeveloperController extends Controller
      */
     public function list()
     {
-        $data = QueryBuilder::for(MainDeveloper::class)->withCount('projects')->get()->toArray();
+        $data = QueryBuilder::for(MainDeveloper::class)->withCount('projects')->withSum('projects', 'unit_count')->get()->toArray();
         return Response::success($data);
     }
 } 
