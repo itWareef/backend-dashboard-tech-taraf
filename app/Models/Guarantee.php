@@ -24,10 +24,11 @@ class Guarantee extends Model implements FileUpload
         if (!isset($this->unit_purchase_date)) {
             return null;
         }
-    
+        $duration = is_numeric($this->duration) ? (float)$this->duration : 0;
+
         try {
             return \Carbon\Carbon::parse($this->unit_purchase_date)
-                ->addYears($this->duration)
+                ->addYears($duration)
                 ->toDateString();
         } catch (\Exception $e) {
             return null;
