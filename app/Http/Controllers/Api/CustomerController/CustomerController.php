@@ -165,11 +165,7 @@ class CustomerController extends Controller
             $userId = auth('customer')->user()->id;
             $orders = QueryBuilder::for(Order::class)->with('coupon','items.brand')->where('customer_id' , $userId)->get();
             $requestService = QueryBuilder::for(ServiceRequest::class)->where('requester_id',$userId)->get();
-            $requestContract = QueryBuilder::for(ContractRequest::class)->where('customer_id',$userId)->get();
-            $requestPlanting = QueryBuilder::for(GardenRequest::class)->with('attachments')->where('customer_id',$userId)->get();
             $allRequests = $requestService
-                ->concat($requestContract)
-                ->concat($requestPlanting)
                 ->sortByDesc('created_at')
                 ->values();
 
