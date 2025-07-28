@@ -56,10 +56,7 @@ return new class extends Migration
             $table->string('number')->unique()->nullable()->after('id');
         });
 
-        // Add number to units table
-        Schema::table('units', function (Blueprint $table) {
-            $table->string('number')->unique()->nullable()->after('id');
-        });
+    
     }
 
     /**
@@ -112,9 +109,6 @@ return new class extends Migration
             $table->dropColumn('number');
         });
 
-        // Remove number from units table
-        Schema::table('units', function (Blueprint $table) {
-            $table->dropColumn('number');
-        });
+
     }
 };
