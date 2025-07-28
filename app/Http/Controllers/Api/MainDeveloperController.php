@@ -38,7 +38,7 @@ class MainDeveloperController extends Controller
      */
         public function show(MainDeveloper $mainDeveloper)
         {
-            $mainDeveloper = MainDeveloper::with('projects')
+            $mainDeveloper = MainDeveloper::with('projects.pictures')
                 ->withCount('projects')
                 ->withSum('projects', 'unit_count')
                 ->findOrFail($mainDeveloper->id);
