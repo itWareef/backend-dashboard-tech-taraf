@@ -150,7 +150,7 @@ class CustomerController extends Controller
     public function myRequests(){
             $userId = auth('customer')->user()->id;
             $orders = QueryBuilder::for(Order::class)->with('coupon','items.brand')->where('customer_id' , $userId)->get();
-            $requestService = QueryBuilder::for(ServiceRequest::class)->where('requester_id',$userId)->get();
+            $requestService = QueryBuilder::for(ServiceRequest::class)->where('requester_id',$userId)->with('requester')->get();
             $allRequests = $requestService
                 ->sortByDesc('created_at')
                 ->values();

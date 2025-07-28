@@ -9,6 +9,7 @@ use App\Models\Project\Unit;
 use App\Models\Store\Brand;
 use App\Models\Store\Cart;
 use App\Services\NumberingService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,6 +29,9 @@ class Customer extends Authenticatable implements FileUpload
         'phone',
         'number'
     ];
+    protected $appends = [
+    'is_contracted',
+];
 
     protected static function boot()
     {
@@ -39,6 +43,14 @@ class Customer extends Authenticatable implements FileUpload
             }
         });
     }
+
+   public function getIsContractedAttribute(): bool
+{
+    return $this->units()->whereHas('contract', function ($query) {
+        $query->whereDate('end_date', '>=', Carbon::today());
+    })->exists();
+}
+
 
     /**
      * The attributes that should be hidden for serialization.
