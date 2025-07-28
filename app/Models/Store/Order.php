@@ -4,12 +4,24 @@ namespace App\Models\Store;
 
 use App\Models\Customer\Customer;
 use App\Models\Project\Unit;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
 
     protected $guarded = ['id'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($order) {
+            if (empty($order->number)) {
+                $order->number = NumberingService::generateNumber(Order::class);
+            }
+        });
+    }
 
     // 🔗 العلاقة مع الزبون
     public function customer()

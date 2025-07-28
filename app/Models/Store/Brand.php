@@ -6,6 +6,7 @@ use App\Core\Interfaces\FileUpload;
 use App\Core\Interfaces\HasManyRelations;
 use App\Core\Interfaces\ManyToManyRelations;
 use App\Models\HandleToArrayTrait;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model implements FileUpload ,ManyToManyRelations , HasManyRelations
@@ -18,7 +19,19 @@ class Brand extends Model implements FileUpload ,ManyToManyRelations , HasManyRe
         'description',
         'price',
         'section_id',
+        'number',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($brand) {
+            if (empty($brand->number)) {
+                $brand->number = NumberingService::generateNumber(Brand::class);
+            }
+        });
+    }
 
     public function section()
     {

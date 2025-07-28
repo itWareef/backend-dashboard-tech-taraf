@@ -6,6 +6,7 @@ use App\Core\Interfaces\FileUpload;
 use App\Models\Category;
 use App\Models\Customer\Customer;
 use App\Models\HandleToArrayTrait;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceRequest extends Model implements FileUpload
@@ -26,7 +27,19 @@ class ServiceRequest extends Model implements FileUpload
         'visits_count',
         'type',
         'status',
+        'number',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($serviceRequest) {
+            if (empty($serviceRequest->number)) {
+                $serviceRequest->number = NumberingService::generateNumber(ServiceRequest::class);
+            }
+        });
+    }
 
     protected $casts = [
         'date' => 'date',

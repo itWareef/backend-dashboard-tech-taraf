@@ -11,6 +11,7 @@ use App\Models\Project\Unit;
 use App\Models\Supervisor;
 use App\Models\SuperVisorVisit;
 use App\Models\User;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -32,8 +33,21 @@ class MaintenanceRequest extends Model implements FileUpload
         'time',
         'otp',
         'rating',
-        'visits_count'
+        'visits_count',
+        'number'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($maintenanceRequest) {
+            if (empty($maintenanceRequest->number)) {
+                $maintenanceRequest->number = NumberingService::generateNumber(MaintenanceRequest::class);
+            }
+        });
+    }
+
     public const STATUSES =[ 'in_progress', 'finished','waiting_rating'];
     public const FINISHED = 'finished';
     public const WAITING_RATING = 'waiting_rating';

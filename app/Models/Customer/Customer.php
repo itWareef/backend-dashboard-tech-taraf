@@ -7,6 +7,7 @@ use App\Models\HandleToArrayTrait;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Store\Brand;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,8 +24,20 @@ class Customer extends Authenticatable implements FileUpload
         'email',
         'password',
         'picture',
-        'phone'
+        'phone',
+        'number'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($customer) {
+            if (empty($customer->number)) {
+                $customer->number = NumberingService::generateNumber(Customer::class);
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Core\Interfaces\FileUpload;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,8 +27,21 @@ class User extends Authenticatable implements FileUpload
         'email',
         'password',
         'picture',
-        'phone'
+        'phone',
+        'number'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($user) {
+            if (empty($user->number)) {
+                $user->number = NumberingService::generateNumber(User::class);
+            }
+        });
+    }
+
     public function documentFullPathStore(): string
     {
         return 'users/';

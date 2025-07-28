@@ -3,6 +3,7 @@
 namespace App\Models\Project;
 
 use App\Models\Customer\Customer;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,16 @@ class Unit extends Model
         'number'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($unit) {
+            if (empty($unit->number)) {
+                $unit->number = NumberingService::generateNumber(Unit::class);
+            }
+        });
+    }
 
     public function contract(){
         return $this->hasOne(Contract::class,'unit_id');

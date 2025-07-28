@@ -2,12 +2,13 @@
 
 namespace App\Models\RequestMaintenanceAndService;
 
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
 
 class ContractRequest extends Model
 {
     protected $fillable = [
-        'request_number',
+        'number',
         'customer_id',
         'ownership_number',
         'developer',
@@ -20,6 +21,17 @@ class ContractRequest extends Model
         'request_status',
         'contract_type',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($contractRequest) {
+            if (empty($contractRequest->number)) {
+                $contractRequest->number = NumberingService::generateNumber(ContractRequest::class);
+            }
+        });
+    }
 
     protected $casts=[
         'contract_type' => 'array'

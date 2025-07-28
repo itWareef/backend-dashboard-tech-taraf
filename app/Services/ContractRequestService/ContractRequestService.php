@@ -8,13 +8,9 @@ use App\Models\RequestMaintenanceAndService\ContractRequest;
 
 class ContractRequestService extends AbstractClassHandleStoreData
 {
-    private string $otp='';
-
     protected function getDataHandle(): array
     {
-        $number = rand(1000, 9999);
-        $this->otp = $number;
-        return array_merge(parent::getDataHandle() ,['request_number' => $number ,'customer_id' => auth('customer')->id()]);
+        return array_merge(parent::getDataHandle() ,['customer_id' => auth('customer')->id()]);
     }
     public function model(): string
     {

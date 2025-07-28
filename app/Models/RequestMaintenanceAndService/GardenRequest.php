@@ -3,6 +3,7 @@
 namespace App\Models\RequestMaintenanceAndService;
 
 use App\Core\Interfaces\HasManyRelations;
+use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
 
 class GardenRequest extends Model implements HasManyRelations
@@ -18,7 +19,19 @@ class GardenRequest extends Model implements HasManyRelations
         'action',
         'latitude',
         'longitude',
+        'number',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($gardenRequest) {
+            if (empty($gardenRequest->number)) {
+                $gardenRequest->number = NumberingService::generateNumber(GardenRequest::class);
+            }
+        });
+    }
 
     public const TYPES =['gardening','landscape_services','public_health'];
     public const VISIT_TYPES =['once','annually'];
