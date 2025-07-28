@@ -36,11 +36,16 @@ class MainDeveloperController extends Controller
     /**
      * Display the specified main developer.
      */
-    public function show(MainDeveloper $mainDeveloper)
-    {
-        $mainDeveloper->load('projects');
-        return Response::success($mainDeveloper->toArray());
-    }
+        public function show(MainDeveloper $mainDeveloper)
+        {
+            $mainDeveloper = MainDeveloper::with('projects')
+                ->withCount('projects')
+                ->withSum('projects', 'unit_count')
+                ->findOrFail($mainDeveloper->id);
+
+            return Response::success($mainDeveloper->toArray());
+        }
+
 
     /**
      * Update the specified main developer.
