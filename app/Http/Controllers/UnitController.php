@@ -25,6 +25,7 @@ class UnitController extends Controller
         // Inject unit purchase_date to each guarantee so expiry_date can be calculated
         $units->each(function ($unit) {
             $purchaseDate = \Carbon\Carbon::parse($unit->purchase_date)->toDateString();
+            dd($purchaseDate);
     
             $unit->project->guarantees->each(function ($guarantee) use ($purchaseDate) {
                 $guarantee->unit_purchase_date = $purchaseDate; // Needed for accessor
