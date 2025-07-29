@@ -11,15 +11,16 @@ use App\Models\AdminPanel\Plan\Plan;
 use App\Models\AdminPanel\Subscription\Subscription;
 use App\Models\AuthenticationModule\User\User;
 use App\Models\Store\Order;
+use App\Services\InvoiceServices\InvoiceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 class PaymentMoyasarServices extends BasePaymentService implements PaymentManagerInterface
 {
     protected  $api_secret;
+    protected InvoiceService $invoiceService;
 
-
-    public function __construct()
+    public function __construct(InvoiceService $invoiceService)
     {
         $this->api_secret = env('MOYASAR_SECRET_KEY');
         $this->base_url = env('MOYASAR_BASE_URL');
@@ -28,6 +29,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
             "Content-Type" => "application/json",
             "Authorization" => "Basic " . base64_encode($this->api_secret . ": ")
         ];
+        $this->invoiceService = $invoiceService;
     }
 
     public function sendPayment(Request $request)
@@ -50,9 +52,15 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
         $response = $this->buildRequest("POST",'/v1/payments',$data);
         if ($response->getData(true)['status'] === 'success') {
             $order->payment_status = 'paid';
+            $order->save();
+            
+            // Update invoice status to paid
+            $this->invoiceService->updateInvoiceStatusOnPayment($order);
+            
             return Response::success(['Transaction_url' => $response->getData(true)['data']['source']['transaction_url'] ], ["Redirect To This Link To Confirm Payment"]);
         }else{
             $order->payment_status = 'rejected';
+            $order->save();
             return Response::error($response->getData(true)['errors']['errors']);
         }
     }

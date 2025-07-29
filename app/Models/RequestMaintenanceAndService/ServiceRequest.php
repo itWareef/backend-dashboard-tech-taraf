@@ -6,8 +6,10 @@ use App\Core\Interfaces\FileUpload;
 use App\Models\Category;
 use App\Models\Customer\Customer;
 use App\Models\HandleToArrayTrait;
+use App\Models\Invoice;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class ServiceRequest extends Model implements FileUpload
 {
@@ -67,5 +69,13 @@ class ServiceRequest extends Model implements FileUpload
         return [
             'picture'
         ];
+    }
+
+    /**
+     * Get the invoice for this service request.
+     */
+    public function invoice(): MorphOne
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 }

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CouponController;
 use App\Http\Controllers\Api\Store\FavouriteBrandController;
 use App\Http\Controllers\Api\Store\FeatureController;
+use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\Store\OrderController;
 use App\Http\Controllers\Api\Store\SectionController;
 use App\Http\Controllers\Api\SupervisorController;
@@ -95,6 +96,15 @@ Route::prefix('customer')->group(function () {
     // Store
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('requests', [CustomerController::class, 'myRequests']);
+
+    // Invoices
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('invoices/summary', [InvoiceController::class, 'getCustomerInvoicesSummary']);
+        Route::get('invoices', [InvoiceController::class, 'getCustomerInvoices']);
+        Route::get('invoices/paid', [InvoiceController::class, 'getCustomerPaidInvoices']);
+        Route::get('invoices/unpaid', [InvoiceController::class, 'getCustomerUnpaidInvoices']);
+        Route::get('invoices/{invoice}', [InvoiceController::class, 'show']);
+    });
 
     Route::get('brands/list/{brand}', [BrandController::class, 'show']);
     Route::get('advertising-posts/list/', [AdvertisingPostController::class, 'list']);
@@ -261,5 +271,14 @@ Route::prefix('admins')->group(function () {
         });
         // Orders
         Route::get('orders', [OrderController::class, 'index']);
+        
+        // Invoices
+        Route::prefix('invoices')->group(function () {
+            Route::get('/', [InvoiceController::class, 'index']);
+            Route::post('/', [InvoiceController::class, 'store']);
+            Route::get('{invoice}', [InvoiceController::class, 'show']);
+            Route::patch('{invoice}/status', [InvoiceController::class, 'updateStatus']);
+            Route::delete('{invoice}', [InvoiceController::class, 'destroy']);
+        });
     });
 });

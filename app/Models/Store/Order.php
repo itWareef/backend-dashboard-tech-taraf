@@ -2,10 +2,13 @@
 
 namespace App\Models\Store;
 
+use App\Events\OrderCreated;
 use App\Models\Customer\Customer;
+use App\Models\Invoice;
 use App\Models\Project\Unit;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Order extends Model
 {
@@ -20,6 +23,11 @@ class Order extends Model
             if (empty($order->number)) {
                 $order->number = NumberingService::generateNumber(Order::class);
             }
+        });
+
+        static::created(function ($order) {
+            // Dispatch event to create invoice automatically
+            event(new OrderCreated($order));
         });
     }
 
@@ -49,5 +57,13 @@ class Order extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    /**
+     * Get the invoice for this order.
+     */
+    public function invoice(): MorphOne
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 }

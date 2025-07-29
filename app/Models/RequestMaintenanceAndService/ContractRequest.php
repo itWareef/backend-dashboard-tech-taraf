@@ -2,8 +2,10 @@
 
 namespace App\Models\RequestMaintenanceAndService;
 
+use App\Models\Invoice;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class ContractRequest extends Model
 {
@@ -36,4 +38,12 @@ class ContractRequest extends Model
     protected $casts=[
         'contract_type' => 'array'
     ];
+
+    /**
+     * Get the invoice for this contract request.
+     */
+    public function invoice(): MorphOne
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
+    }
 }

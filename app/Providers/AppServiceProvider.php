@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\OrderCreated;
+use App\Listeners\CreateInvoiceForOrder;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -15,6 +17,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Passport::ignoreRoutes();
 
+        // Register event listeners
+        $this->app['events']->listen(
+            OrderCreated::class,
+            CreateInvoiceForOrder::class
+        );
     }
 
     /**

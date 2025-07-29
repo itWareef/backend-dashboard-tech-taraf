@@ -9,12 +9,14 @@ use App\Models\MaintenanceRequestAttachment;
 use App\Models\Project\Project;
 use App\Models\Project\Unit;
 use App\Models\Supervisor;
+use App\Models\Invoice;
 use App\Models\SuperVisorVisit;
 use App\Models\User;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class MaintenanceRequest extends Model implements FileUpload
 {
@@ -84,5 +86,13 @@ class MaintenanceRequest extends Model implements FileUpload
     public function superVisorVisits(): MorphMany
     {
         return $this->morphMany(SuperVisorVisit::class, 'request');
+    }
+
+    /**
+     * Get the invoice for this maintenance request.
+     */
+    public function invoice(): MorphOne
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 }

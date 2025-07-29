@@ -3,8 +3,10 @@
 namespace App\Models\RequestMaintenanceAndService;
 
 use App\Core\Interfaces\HasManyRelations;
+use App\Models\Invoice;
 use App\Services\NumberingService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class GardenRequest extends Model implements HasManyRelations
 {
@@ -49,5 +51,13 @@ class GardenRequest extends Model implements HasManyRelations
         return [
             'attachments'
         ];
+    }
+
+    /**
+     * Get the invoice for this garden request.
+     */
+    public function invoice(): MorphOne
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 }
