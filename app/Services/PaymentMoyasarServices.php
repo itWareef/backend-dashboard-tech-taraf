@@ -52,7 +52,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
          $data['callback_url'] ='http://api.taraf.dashboard-tech.com/';
         $response = $this->buildRequest("POST",'/v1/payments',$data);
         if ($response->getData(true)['status'] === 'success') {
-            $order->status = 'paid';
+            $order->payment_status = 'paid';
             $order->save();
 
             // Update invoice status to paid
@@ -84,13 +84,13 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
         $data['callback_url'] ='http://api.taraf.dashboard-tech.com/';
         $response = $this->buildRequest("POST",'/v1/payments',$data);
         if ($response->getData(true)['status'] === 'success') {
-            $invoice->payment_status = 'paid';
+            $invoice->status = 'paid';
             $invoice->save();
 
 
             return Response::success(['Transaction_url' => $response->getData(true)['data']['source']['transaction_url'] ], ["Redirect To This Link To Confirm Payment"]);
         }else{
-            $invoice->payment_status = 'rejected';
+            $invoice->status = 'rejected';
             $invoice->save();
             return Response::error($response->getData(true)['errors']['errors']);
         }
