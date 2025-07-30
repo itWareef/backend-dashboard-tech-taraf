@@ -120,8 +120,9 @@ Route::prefix('customer')->group(function () {
         Route::delete('/{cart}', [CartController::class, 'destroy']);
     });
 
-    
+
     Route::post('/payment/', [PaymentController::class, 'paymentProcess'])->middleware(['auth:customer']);
+    Route::post('/payment-invoice/', [PaymentController::class, 'paymentProcessInvoice'])->middleware(['auth:customer']);
 
     Route::post('coupons/validate', [CouponController::class, 'validateCoupon']);
     Route::post('orders', [OrderController::class, 'store']);
@@ -270,13 +271,19 @@ Route::prefix('admins')->group(function () {
             Route::delete('{advertisingPost}', [AdvertisingPostController::class, 'destroy']);
         });
         // Orders
-        Route::get('orders', [OrderController::class, 'index']);
-        
+        Route::prefix('orders')->group(function () {
+            Route::get('/', [OrderController::class, 'index']);
+            Route::post('/', [OrderController::class, 'store']);
+            Route::get('{order}', [OrderController::class, 'show']);
+            Route::put('{order}', [OrderController::class, 'update']);
+        });
+
         // Invoices
         Route::prefix('invoices')->group(function () {
             Route::get('/', [InvoiceController::class, 'index']);
             Route::post('/', [InvoiceController::class, 'store']);
             Route::get('{invoice}', [InvoiceController::class, 'show']);
+            Route::put('{invoice}', [InvoiceController::class, 'update']);
             Route::patch('{invoice}/status', [InvoiceController::class, 'updateStatus']);
             Route::delete('{invoice}', [InvoiceController::class, 'destroy']);
         });

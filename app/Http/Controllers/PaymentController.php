@@ -19,4 +19,8 @@ class PaymentController extends Controller
     {
         return (new PaymentMoyasarServices())->callBack($request);
     }
+    public function paymentProcessInvoice(Request $request)
+    {
+        return (new PaymentMoyasarServices())->sendPaymentInvoice($request);
+    }
 }

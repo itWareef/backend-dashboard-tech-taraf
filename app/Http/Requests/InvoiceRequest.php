@@ -2,10 +2,30 @@
 
 namespace App\Http\Requests;
 
+use App\Models\RequestMaintenanceAndService\ContractRequest;
+use App\Models\RequestMaintenanceAndService\GardenRequest;
+use App\Models\RequestMaintenanceAndService\ServiceRequest;
+use App\Models\RequestMaintenanceAndService\UnitRequest;
+use App\Models\Requests\MaintenanceRequest;
+use App\Models\Requests\PlantingRequest;
+use App\Models\Store\Order;
 use Illuminate\Foundation\Http\FormRequest;
 
 class InvoiceRequest extends FormRequest
 {
+    /**
+     * Allowed invoiceable types for morph relationships
+     */
+    protected const ALLOWED_INVOICEABLE_TYPES = [
+        MaintenanceRequest::class,
+        PlantingRequest::class,
+        ServiceRequest::class,
+        GardenRequest::class,
+        ContractRequest::class,
+        UnitRequest::class,
+        Order::class,
+    ];
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,8 +45,45 @@ class InvoiceRequest extends FormRequest
             'amount' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:1000',
             'status' => 'sometimes|in:paid,unpaid',
-            'invoiceable_type' => 'required|string',
-            'invoiceable_id' => 'required|integer',
+            'invoiceable_type' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!in_array($value, self::ALLOWED_INVOICEABLE_TYPES)) {
+                        $fail('نوع الطلب غير مسموح به');
+                    }
+                }
+            ],
+            'invoiceable_id' => [
+                'required',
+                'integer',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    $invoiceableType = $this->input('invoiceable_type');
+                    
+                    if (!in_array($invoiceableType, self::ALLOWED_INVOICEABLE_TYPES)) {
+                        $fail('نوع الطلب غير صحيح');
+                        return;
+                    }
+
+                    // Check if the model exists
+                    if (!class_exists($invoiceableType)) {
+                        $fail('نوع الطلب غير موجود');
+                        return;
+                    }
+
+                    $model = $invoiceableType::find($value);
+                    if (!$model) {
+                        $fail('الطلب غير موجود');
+                        return;
+                    }
+
+                    // Check if invoice already exists for this model
+                    if ($model->invoice()->exists()) {
+                        $fail('يوجد فاتورة مسبقاً لهذا الطلب');
+                    }
+                }
+            ],
         ];
     }
 
@@ -44,6 +101,15 @@ class InvoiceRequest extends FormRequest
             'invoiceable_type.required' => 'نوع الطلب مطلوب',
             'invoiceable_id.required' => 'معرف الطلب مطلوب',
             'invoiceable_id.integer' => 'معرف الطلب يجب أن يكون رقماً',
+            'invoiceable_id.min' => 'معرف الطلب يجب أن يكون أكبر من صفر',
         ];
+    }
+
+    /**
+     * Get allowed invoiceable types
+     */
+    public static function getAllowedInvoiceableTypes(): array
+    {
+        return self::ALLOWED_INVOICEABLE_TYPES;
     }
 }

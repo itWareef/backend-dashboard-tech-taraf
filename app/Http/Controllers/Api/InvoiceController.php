@@ -35,6 +35,11 @@ class InvoiceController extends Controller
             $query->where('customer_id', $request->customer_id);
         }
 
+        // Filter by invoiceable type
+        if ($request->has('invoiceable_type')) {
+            $query->where('invoiceable_type', $request->invoiceable_type);
+        }
+
         $invoices = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return response()->json([
@@ -158,22 +163,18 @@ class InvoiceController extends Controller
     public function store(InvoiceRequest $request): JsonResponse
     {
         try {
-            // Find the model instance
+            // The validation in InvoiceRequest already handles model existence and duplicate checks
             $modelClass = $request->invoiceable_type;
             $model = $modelClass::find($request->invoiceable_id);
-            
-            if (!$model) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'الطلب غير موجود'
-                ], 404);
-            }
 
             $invoice = $this->invoiceService->createInvoice(
                 $model,
                 $request->amount,
                 $request->description
             );
+
+            // Load relationships for response
+            $invoice->load(['customer', 'invoiceable']);
 
             return response()->json([
                 'success' => true,
@@ -191,6 +192,51 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Update invoice details
+     */
+    public function update(int $id, InvoiceRequest $request): JsonResponse
+    {
+        $invoice = Invoice::with(['customer', 'invoiceable'])->find($id);
+
+        if (!$invoice) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الفاتورة غير موجودة'
+            ], 404);
+        }
+
+        try {
+            // Check if trying to change invoiceable relationship
+            if ($request->has('invoiceable_type') || $request->has('invoiceable_id')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن تغيير نوع الطلب المرتبط بالفاتورة'
+                ], 400);
+            }
+
+            // Update allowed fields
+            $invoice->update([
+                'amount' => $request->amount,
+                'description' => $request->description,
+                'status' => $request->status ?? $invoice->status,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'تم تحديث الفاتورة بنجاح',
+                'data' => $invoice->fresh(['customer', 'invoiceable'])
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'حدث خطأ أثناء تحديث الفاتورة',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Update invoice status
      */
     public function updateStatus(int $id, Request $request): JsonResponse
@@ -199,7 +245,7 @@ class InvoiceController extends Controller
             'status' => 'required|in:paid,unpaid'
         ]);
 
-        $invoice = Invoice::find($id);
+        $invoice = Invoice::with(['customer', 'invoiceable'])->find($id);
 
         if (!$invoice) {
             return response()->json([
@@ -218,7 +264,7 @@ class InvoiceController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'تم تحديث حالة الفاتورة بنجاح',
-                'data' => $invoice->fresh()
+                'data' => $invoice->fresh(['customer', 'invoiceable'])
             ]);
 
         } catch (\Exception $e) {

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Customer\Customer;
+use App\Models\Invoice;
 use App\Models\Project\Unit;
 use App\Models\RequestMaintenanceAndService\ContractRequest;
 use App\Models\RequestMaintenanceAndService\GardenRequest;
@@ -24,7 +25,7 @@ class NumberingService
         $prefix = self::getPrefixForModel($modelClass);
         $lastNumber = self::getLastNumber($modelClass);
         $nextNumber = $lastNumber + 1;
-        
+
         return $prefix . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
@@ -43,7 +44,8 @@ class NumberingService
             Customer::class => 'CU',        // عميل (Customer)
             User::class => 'E',             // موظف (Employee)
             Brand::class => 'P',            // منتج (Product)
-            Unit::class => 'U',             // رقم الوحدة (Unit Number)
+            Unit::class => 'U',
+            Invoice::class=> 'I'// رقم الوحدة (Unit Number)
         ];
 
         return $prefixes[$modelClass] ?? 'X';
@@ -55,7 +57,7 @@ class NumberingService
     private static function getLastNumber(string $modelClass): int
     {
         $prefix = self::getPrefixForModel($modelClass);
-        
+
         $lastRecord = DB::table(self::getTableName($modelClass))
             ->where('number', 'like', $prefix . '%')
             ->orderByRaw("CAST(SUBSTRING(number, " . (strlen($prefix) + 1) . ") AS UNSIGNED) DESC")
@@ -67,7 +69,7 @@ class NumberingService
 
         $number = $lastRecord->number;
         $numericPart = substr($number, strlen($prefix));
-        
+
         return (int) $numericPart;
     }
 
@@ -87,4 +89,4 @@ class NumberingService
     {
         return self::generateNumber(get_class($model));
     }
-} 
+}
