@@ -68,7 +68,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
     public function sendPaymentInvoice(Request $request)
     {
         $data = $request->all();
-        $invoice =Invoice::find($data['invoice_id']);
+        $invoice =Invoice::findOrFail($data['invoice_id']);
         $data['amount'] = $invoice->amount * 100;
         $data['description'] = "Pay Invoice #" . $invoice->number;
         $data['currency'] = "SAR";
