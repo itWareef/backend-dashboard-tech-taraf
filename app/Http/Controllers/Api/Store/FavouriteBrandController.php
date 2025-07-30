@@ -15,17 +15,17 @@ class FavouriteBrandController extends Controller
         $customer = $request->user('customer');
 
         // Get favorite brands
-        $favourites = $customer->favouriteBrands()->with('products')->get();
+        $favourites = $customer->favouriteBrands()->get();
 
         // Get all brand_ids that exist in the customer's cart (via product.brand_id)
         $brandIdsInCart = collect();
 
         if ($customer->cart) {
             $brandIdsInCart = $customer->cart->items()
-                ->whereHas('product.brand') // Ensure product and brand exist
-                ->with('product.brand:id') // Optional optimization
+                ->whereHas('brand') // Ensure product and brand exist
+                ->with('brand:id') // Optional optimization
                 ->get()
-                ->pluck('product.brand_id')
+                ->pluck('brand.id')
                 ->unique();
         }
 

@@ -39,14 +39,14 @@ class BrandController extends Controller
 
         // Check if brand is in customer's favorites
         $isFavorite = $customer
-            ? $customer->favouriteBrands()->where('brand_id', $brand->id)->exists()
+            ? $customer->favouriteBrands()->where('id', $brand->id)->exists()
             : false;
 
         // Check if the brand exists in any of the customer's cart items
             if ($customer && $customer->cart) {
                 $isInCart = $customer->cart->items()
-                    ->whereHas('product', function ($query) use ($brand) {
-                        $query->where('brand_id', $brand->id);
+                    ->whereHas('brand', function ($query) use ($brand) {
+                        $query->where('id', $brand->id);
                     })->exists();
             }
 
