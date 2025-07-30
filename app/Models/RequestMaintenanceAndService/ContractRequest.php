@@ -22,7 +22,16 @@ class ContractRequest extends Model
         'payment_status',
         'request_status',
         'contract_type',
+        'status',
     ];
+
+    // Status constants
+    public const STATUSES = ['pending', 'under_review', 'approved', 'rejected', 'completed'];
+    public const PENDING = 'pending';
+    public const UNDER_REVIEW = 'under_review';
+    public const APPROVED = 'approved';
+    public const REJECTED = 'rejected';
+    public const COMPLETED = 'completed';
 
     protected static function boot()
     {

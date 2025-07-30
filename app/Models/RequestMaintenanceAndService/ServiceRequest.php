@@ -43,6 +43,13 @@ class ServiceRequest extends Model implements FileUpload
         });
     }
 
+    // Status constants
+    public const STATUSES = ['pending', 'in_progress', 'completed', 'cancelled'];
+    public const PENDING = 'pending';
+    public const IN_PROGRESS = 'in_progress';
+    public const COMPLETED = 'completed';
+    public const CANCELLED = 'cancelled';
+
     protected $casts = [
         'date' => 'date',
         'rating' => 'double',

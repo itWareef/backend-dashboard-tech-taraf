@@ -12,6 +12,14 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Order extends Model
 {
+    // Status constants
+    public const STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+    public const PENDING = 'pending';
+    public const CONFIRMED = 'confirmed';
+    public const PROCESSING = 'processing';
+    public const SHIPPED = 'shipped';
+    public const DELIVERED = 'delivered';
+    public const CANCELLED = 'cancelled';
 
     protected $guarded = ['id'];
 

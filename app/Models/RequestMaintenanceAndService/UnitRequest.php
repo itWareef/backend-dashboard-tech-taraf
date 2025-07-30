@@ -16,7 +16,16 @@ class UnitRequest extends Model
         'space',
         'deed_number',
         'date',
+        'status',
     ];
+
+    // Status constants
+    public const STATUSES = ['pending', 'under_review', 'approved', 'rejected', 'completed'];
+    public const PENDING = 'pending';
+    public const UNDER_REVIEW = 'under_review';
+    public const APPROVED = 'approved';
+    public const REJECTED = 'rejected';
+    public const COMPLETED = 'completed';
 
     protected $casts = [
         'date' => 'date',

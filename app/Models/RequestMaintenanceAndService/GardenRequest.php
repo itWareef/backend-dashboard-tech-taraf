@@ -37,6 +37,15 @@ class GardenRequest extends Model implements HasManyRelations
 
     public const TYPES =['gardening','landscape_services','public_health'];
     public const VISIT_TYPES =['once','annually'];
+    
+    // Status constants
+    public const STATUSES = ['pending', 'approved', 'in_progress', 'completed', 'rejected'];
+    public const PENDING = 'pending';
+    public const APPROVED = 'approved';
+    public const IN_PROGRESS = 'in_progress';
+    public const COMPLETED = 'completed';
+    public const REJECTED = 'rejected';
+    
     protected $casts = [
         'visit_type' => 'string',
     ];
