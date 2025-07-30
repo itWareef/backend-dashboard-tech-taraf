@@ -90,7 +90,7 @@ class PaymentMoyasarServices extends BasePaymentService implements PaymentManage
 
             return Response::success(['Transaction_url' => $response->getData(true)['data']['source']['transaction_url'] ], ["Redirect To This Link To Confirm Payment"]);
         }else{
-            $invoice->status = 'rejected';
+            $invoice->status = 'unpaid';
             $invoice->save();
             return Response::error($response->getData(true)['errors']['errors']);
         }
