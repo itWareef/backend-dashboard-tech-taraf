@@ -108,7 +108,7 @@ class Customer extends Authenticatable implements FileUpload
     }
     public function cart()
     {
-        return $this->hasMany(Cart::class, 'customer_id');
+        return $this->hasOne(Cart::class, 'customer_id');
     }
 
 
