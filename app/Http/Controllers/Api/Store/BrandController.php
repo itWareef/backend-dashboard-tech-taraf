@@ -42,6 +42,7 @@ class BrandController extends Controller
             ? $customer->favouriteBrands()->where('id', $brand->id)->exists()
             : false;
 
+        $isInCart = false;
         // Check if the brand exists in any of the customer's cart items
             if ($customer && $customer->cart) {
                 $isInCart = $customer->cart->items()
