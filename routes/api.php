@@ -123,6 +123,8 @@ Route::prefix('customer')->group(function () {
 
     Route::post('/payment/', [PaymentController::class, 'paymentProcess'])->middleware(['auth:customer']);
     Route::post('/payment-invoice/', [PaymentController::class, 'paymentProcessInvoice'])->middleware(['auth:customer']);
+    Route::post('/payed-order/', [PaymentController::class, 'orderPayed'])->middleware(['auth:customer']);
+    Route::post('/payed-invoice/', [PaymentController::class, 'invoicePayed'])->middleware(['auth:customer']);
 
     Route::post('coupons/validate', [CouponController::class, 'validateCoupon']);
     Route::post('orders', [OrderController::class, 'store']);
