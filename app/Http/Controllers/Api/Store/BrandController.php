@@ -35,7 +35,7 @@ class BrandController extends Controller
     }
     public function show(Brand $brand)
     {
-        $customer = auth('customer')->user();
+        $customer = auth('customer')->user()??false;
 
         // Check if brand is in customer's favorites
         $isFavorite = $customer
