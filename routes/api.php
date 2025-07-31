@@ -92,7 +92,10 @@ Route::prefix('customer')->group(function () {
 
     // Chat
     Route::post('/chat/send', [ChatController::class, 'send']);
-
+    Route::middleware('auth:customer')->group(function () {
+        Route::post('/chat/send', [ChatController::class, 'send']);
+        Route::get('/chat/thread/{id}', [ChatController::class, 'getThreadMessages']);
+    });
     // Store
     Route::get('brands/list', [BrandController::class, 'list']);
     Route::get('requests', [CustomerController::class, 'myRequests']);
@@ -279,7 +282,10 @@ Route::prefix('admins')->group(function () {
             Route::get('{order}', [OrderController::class, 'show']);
             Route::put('{order}', [OrderController::class, 'update']);
         });
-
+        Route::middleware('auth:admin')->group(function () {
+            Route::post('/chat/reply', [ChatController::class, 'replyFromAgent']);
+            Route::get('/chat/threads', [ChatController::class, 'getAllThreads']);
+        });
         // Invoices
         Route::prefix('invoices')->group(function () {
             Route::get('/', [InvoiceController::class, 'index']);

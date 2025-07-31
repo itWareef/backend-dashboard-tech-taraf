@@ -1,55 +1,84 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\ChatMessage;
+use App\Models\ChatThread;
+use App\Events\MessageSent;
 use App\Services\ChatBot\ChatBotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class ChatController extends Controller
 {
-// ChatController
+    // إرسال رسالة من العميل
     public function send(Request $request)
     {
-        $message = $request->input('message');
-        ChatMessage::create([
-            'user_id' => auth('customer')->id(),
-            'message' => $message,
-            'sender' => 'user',
+        $request->validate(['message' => 'required|string']);
+        $user = auth('customer')->user();
+
+        $thread = ChatThread::firstOrCreate(['customer_id' => $user->id]);
+
+        $msg = ChatMessage::create([
+            'thread_id' => $thread->id,
+            'sender_id' => $user->id,
+            'sender_type' => 'customer',
+            'message' => $request->message,
         ]);
 
-        // معالجة الرد حسب الرسالة
-        $response = ChatBotService::generateResponse($message , auth('customer')->id());
+        // بث الرسالة
+        event(new MessageSent($msg));
 
-        ChatMessage::create([
-            'user_id' => auth('customer')->id(),
-            'message' => $response['message'],
-            'sender' => 'bot',
+        // رد البوت
+        $botReply = ChatBotService::generateResponse($request->message, $user->id);
+
+        $botMsg = ChatMessage::create([
+            'thread_id' => $thread->id,
+            'sender_id' => 0,
+            'sender_type' => 'bot',
+            'message' => $botReply['message'],
         ]);
 
-        return Response::success(['reply' => $response]);
+        event(new MessageSent($botMsg));
+
+        return Response::success(['reply' => $botReply]);
     }
 
-    public function PlantingDataChat(Request $request)
+    // رد من خدمة العملاء
+    public function replyFromAgent(Request $request)
     {
-        $data = QueryBuilder::for(ChatMessage::class)->whereIn('message' ,['Landscape' ,'اللاند سكيب'])->paginate(20);
-        return Response::success($data);
+        $request->validate([
+            'thread_id' => 'required|exists:chat_threads,id',
+            'message' => 'required|string',
+        ]);
+
+        $agent = auth('admin')->user();
+
+        $msg = ChatMessage::create([
+            'thread_id' => $request->thread_id,
+            'sender_id' => $agent->id,
+            'sender_type' => 'agent',
+            'message' => $request->message,
+        ]);
+
+        event(new MessageSent($msg));
+
+        return Response::success(['message' => 'تم إرسال الرد بنجاح']);
     }
-    public function serviceDataChat(Request $request)
+
+    // عرض كل الرسائل في جلسة واحدة
+    public function getThreadMessages($thread_id)
     {
-        $data = QueryBuilder::for(ChatMessage::class)->whereIn('message' ,[  'إدارة المرافق',
-            'الصيانة والتشغيل',
-            'طلب أخر'
-        , 'Facility Management',
-            'Maintenance and Operation',
-            'Other Request'])->paginate(20);
-        return Response::success($data);
+        $messages = ChatMessage::where('thread_id', $thread_id)
+            ->orderBy('created_at')
+            ->get();
+
+        return Response::success(['messages' => $messages]);
     }
-    public function salesDataChat(Request $request)
+
+    // عرض كل الجلسات لخدمة العملاء
+    public function getAllThreads()
     {
-        $data = QueryBuilder::for(ChatMessage::class)->whereIn('message' ,[ 'Sales','المبيعات'])->paginate(20);
-        return Response::success($data);
+        $threads = ChatThread::with('customer')->withCount('messages')->latest()->paginate(10);
+        return Response::success(['threads' => $threads]);
     }
 }

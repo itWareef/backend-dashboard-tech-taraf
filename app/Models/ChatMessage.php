@@ -11,4 +11,14 @@ class ChatMessage extends Model
         'message' ,
         'sender',
     ];
+    public function sender()
+    {
+        return $this->morphTo();
+    }
+
+    public function thread()
+    {
+        return $this->belongsTo(ChatThread::class);
+    }
+
 }
