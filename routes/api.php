@@ -63,6 +63,7 @@ Route::prefix('customer')->group(function () {
         // Maintenance Requests
         Route::prefix('maintenance-request')->group(function () {
             Route::post('/', [\App\Http\Controllers\MaintenanceRequestController::class, 'store']);
+            Route::post('/cancelled', [\App\Http\Controllers\MaintenanceRequestController::class,'cancelled']);
             Route::post('add-review/{maintenanceRequest}', [\App\Http\Controllers\MaintenanceRequestController::class, 'addReview']);
             Route::get('{status}', [\App\Http\Controllers\MaintenanceRequestController::class, 'list']);
         });
@@ -70,6 +71,7 @@ Route::prefix('customer')->group(function () {
         // Planting Requests
         Route::prefix('planting-request')->group(function () {
             Route::post('/', [\App\Http\Controllers\PlantingRequestController::class, 'store']);
+            Route::post('/cancelled', [\App\Http\Controllers\PlantingRequestController::class, 'cancelled']);
             Route::post('add-review/{plantingRequest}', [\App\Http\Controllers\PlantingRequestController::class, 'addReview']);
             Route::get('{status}', [\App\Http\Controllers\PlantingRequestController::class, 'list']);
         });

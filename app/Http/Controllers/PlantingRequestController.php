@@ -40,4 +40,12 @@ class PlantingRequestController extends Controller
         ]);
         return Response::success([],['شكرا لإضاقة مراجعة نقدر وقتك الثمين']);
     }
+
+    public function cancelled(PlantingRequest $plantingRequest)
+    {
+        $plantingRequest->update([
+            'status'    => PlantingRequest::CANCELLED,
+        ]);
+        return Response::success([],['تم الغاء الطلب بنجاح']);
+    }
 }

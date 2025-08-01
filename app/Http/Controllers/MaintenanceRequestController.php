@@ -36,4 +36,11 @@ class MaintenanceRequestController extends Controller
         ]);
         return Response::success([],['شكرا لإضاقة مراجعة نقدر وقتك الثمين']);
     }
+    public function cancelled(MaintenanceRequest $maintenanceRequest)
+    {
+        $maintenanceRequest->update([
+            'status'    => MaintenanceRequest::CANCELLED,
+        ]);
+        return Response::success([],['تم الغاء الطلب بنجاح']);
+    }
 }

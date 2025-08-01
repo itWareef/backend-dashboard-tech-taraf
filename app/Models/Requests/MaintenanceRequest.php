@@ -42,7 +42,7 @@ class MaintenanceRequest extends Model implements FileUpload
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($maintenanceRequest) {
             if (empty($maintenanceRequest->number)) {
                 $maintenanceRequest->number = NumberingService::generateNumber(MaintenanceRequest::class);
@@ -50,10 +50,12 @@ class MaintenanceRequest extends Model implements FileUpload
         });
     }
 
-    public const STATUSES =[ 'in_progress', 'finished','waiting_rating'];
+    public const STATUSES =[ 'in_progress', 'finished','waiting_rating' ,'cancelled'];
     public const FINISHED = 'finished';
     public const WAITING_RATING = 'waiting_rating';
     public const IN_PROGRESS = 'in_progress';
+    public const CANCELLED = 'cancelled';
+
     public function documentFullPathStore(): string
     {
         return 'MaintenanceRequests/'.$this->id.'/';
