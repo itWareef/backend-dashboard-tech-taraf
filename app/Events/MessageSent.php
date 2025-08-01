@@ -42,4 +42,12 @@ class MessageSent implements ShouldBroadcast
             'created_at' => $this->message->created_at->toDateTimeString(),
         ];
     }
+    public function broadcastAs()
+    {
+        if (in_array($this->message->sender_type, ['agent', 'bot'])) {
+            return 'chat.conversation.' . $this->message->thread->customer_id;
+        }
+
+        // لو مرسل الرسالة "customer"، ابعت للـ admin
+        return 'admin';    }
 }
