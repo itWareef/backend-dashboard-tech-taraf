@@ -20,6 +20,7 @@ class ChatController extends Controller
 
         $msg = ChatMessage::create([
             'thread_id' => $thread->id,
+            'user_id' => $thread->id,
             'sender_id' => $user->id,
             'sender_type' => 'customer',
             'message' => $request->message,
@@ -33,6 +34,7 @@ class ChatController extends Controller
 
         $botMsg = ChatMessage::create([
             'thread_id' => $thread->id,
+            'user_id' => $thread->id,
             'sender_id' => 0,
             'sender_type' => 'bot',
             'message' => $botReply['message'],
