@@ -64,7 +64,7 @@ class ChatController extends Controller
             'message' => $request->message,
         ]);
 
-        event(new MessageSent($msg));
+        event(new MessageSent($msg->load('thread')));
 
         return Response::success(['message' => 'تم إرسال الرد بنجاح']);
     }
