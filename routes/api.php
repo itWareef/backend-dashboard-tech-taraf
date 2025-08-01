@@ -230,6 +230,10 @@ Route::prefix('admins')->group(function () {
         Route::delete('{mainProject}', [MainProjectController::class, 'destroy']);
         Route::delete('{mainProject}/pictures/{picture}', [MainProjectController::class, 'deletePicture']);
     });
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/chat/reply', [ChatController::class, 'replyFromAgent']);
+        Route::get('/chat/threads', [ChatController::class, 'getAllThreads']);
+    });
     // Store Management
     Route::prefix('store')->group(function () {
         // Features
@@ -282,10 +286,7 @@ Route::prefix('admins')->group(function () {
             Route::get('{order}', [OrderController::class, 'show']);
             Route::put('{order}', [OrderController::class, 'update']);
         });
-        Route::middleware('auth:admin')->group(function () {
-            Route::post('/chat/reply', [ChatController::class, 'replyFromAgent']);
-            Route::get('/chat/threads', [ChatController::class, 'getAllThreads']);
-        });
+
         // Invoices
         Route::prefix('invoices')->group(function () {
             Route::get('/', [InvoiceController::class, 'index']);
