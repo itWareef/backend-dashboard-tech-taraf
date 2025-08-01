@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\ChatMessage;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -23,11 +24,11 @@ class MessageSent implements ShouldBroadcastNow
     {
         // لو مرسل الرسالة "agent" أو "bot"، ابعت للـ customer
         if (in_array($this->message->sender_type, ['agent', 'bot'])) {
-            return new PrivateChannel('chat.conversation.' . $this->message->thread->customer_id);
+            return new Channel('chat.conversation.' . $this->message->thread->customer_id);
         }
 
         // لو مرسل الرسالة "customer"، ابعت للـ admin
-        return new PrivateChannel('admin'); // أو مثلاً admin.1 لو فيه عدة مشرفين
+        return new Channel('admin'); // أو مثلاً admin.1 لو فيه عدة مشرفين
     }
 
     public function broadcastWith()
