@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('customers')->onDelete('cascade');
             $table->text('message');
-            $table->enum('sender', ['user', 'bot']);
             $table->timestamps();
         });
     }

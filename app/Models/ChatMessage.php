@@ -10,6 +10,9 @@ class ChatMessage extends Model
         'user_id',
         'message' ,
         'sender',
+        'thread_id',
+        'sender_id',
+        'sender_type'
     ];
     public function sender()
     {
