@@ -40,7 +40,7 @@ class ChatController extends Controller
 
         event(new MessageSent($botMsg));
 
-        return Response::success(['reply' => $botReply]);
+        return Response::success(['reply' => $botReply ,'is_bot'=>false]);
     }
 
     // رد من خدمة العملاء
