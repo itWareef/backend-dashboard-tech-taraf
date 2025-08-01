@@ -53,7 +53,7 @@ class ChatController extends Controller
             'message' => 'required|string',
         ]);
 
-        $agent = auth('admin')->user();
+        $agent = auth('api')->user();
         $thread = ChatThread::find( $request->thread_id);
 
         $msg = ChatMessage::create([
