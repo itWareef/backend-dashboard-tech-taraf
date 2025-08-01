@@ -54,10 +54,12 @@ class ChatController extends Controller
         ]);
 
         $agent = auth('admin')->user();
+        $thread = ChatThread::find( $request->thread_id);
 
         $msg = ChatMessage::create([
             'thread_id' => $request->thread_id,
             'sender_id' => $agent->id,
+            'user_id' => $thread->customer_id,
             'sender_type' => 'agent',
             'message' => $request->message,
         ]);
