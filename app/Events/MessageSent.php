@@ -31,7 +31,9 @@ class MessageSent implements ShouldBroadcast
 
     public function broadcastWith()
     {
+        $isBot = $this->message->sender_type ==='agent'?false:true;
         return [
+            'is_bot' => $isBot,
             'id' => $this->message->id,
             'content' => $this->message->message,
             'thread_id' => $this->message->thread_id,
